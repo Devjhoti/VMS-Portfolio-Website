@@ -1,0 +1,45 @@
+/* Design Tokens - Virtual Model Studio (Apple-refined) */
+
+:root {
+  /* Colors - Brand-derived */
+  --color-navy-base: #1D263D;
+  --color-silver: #E0E0E0;
+  --color-copper: #B58E7D;
+  --color-bg-primary: #fbfbfb;
+  --color-bg-secondary: #f5f5f7;
+  --color-text-primary: #1d1d1f;
+  --color-text-muted: #86868b;
+
+  /* Spacing - more generous, Apple-like */
+  --content-max-width: 980px;
+  --side-margin: clamp(2.2rem, 6vw, 5rem);
+  --section-padding-y: clamp(5rem, 14vh, 10rem);
+  --section-spacer: 28vh;
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 6rem;
+  --space-2xl: 10rem;
+
+  /* Typography - stronger scale, Apple-inspired */
+  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", system-ui, sans-serif;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --letter-spacing-tight: -0.03em;
+  --letter-spacing-wide: 0.03em;
+  --font-hero: clamp(3.5rem, 11vw, 6.5rem);
+  --font-section-title: clamp(1.75rem, 3.5vw, 2.5rem);
+  --font-body: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  --font-caption: 0.8125rem;
+  --line-height-tight: 1.05;
+  --line-height-body: 1.47059;
+  --line-height-loose: 1.6;
+
+  /* Motion - slower, subtler, Apple-like */
+  --transition-reveal: 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+  --transition-hover: 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  --translate-reveal: 0.5rem;
+}
