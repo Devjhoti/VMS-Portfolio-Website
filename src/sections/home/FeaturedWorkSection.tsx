@@ -1,5 +1,7 @@
 import { RevealOnScroll } from '../../components/ui/RevealOnScroll';
-import { VideoEmbed } from '../../components/video/VideoEmbed';
+import { VideoPlayer } from '../../components/VideoPlayer';
+import { MasonryGallery } from '../../components/MasonryGallery';
+import { featuredWorkVideos } from '../../data/videos';
 
 export function FeaturedWorkSection() {
   return (
@@ -25,66 +27,34 @@ export function FeaturedWorkSection() {
         </h2>
       </RevealOnScroll>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '2fr 1fr',
-          gridTemplateRows: 'auto auto',
-          gap: 'var(--space-lg)',
-        }}
-      >
-        <RevealOnScroll stagger={0}>
-          <div
-            style={{
-              gridRow: '1 / -1',
-              transition: 'transform var(--transition-hover)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.02)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            <VideoEmbed placeholderLabel="Hero project" aspectRatio="16/9" />
-            <p style={{ marginTop: 'var(--space-sm)', color: 'var(--color-text-muted)', fontSize: 'var(--font-caption)' }}>
-              Hero project — Brand name
-            </p>
-          </div>
-        </RevealOnScroll>
-        <RevealOnScroll stagger={120}>
-          <div
-            style={{ transition: 'transform var(--transition-hover)' }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.02)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            <VideoEmbed placeholderLabel="Secondary 1" aspectRatio="4/3" />
-            <p style={{ marginTop: 'var(--space-sm)', color: 'var(--color-text-muted)', fontSize: 'var(--font-caption)' }}>
-              Secondary project 1
-            </p>
-          </div>
-        </RevealOnScroll>
-        <RevealOnScroll stagger={180}>
-          <div
-            style={{ transition: 'transform var(--transition-hover)' }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.02)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            <VideoEmbed placeholderLabel="Secondary 2" aspectRatio="4/3" />
-            <p style={{ marginTop: 'var(--space-sm)', color: 'var(--color-text-muted)', fontSize: 'var(--font-caption)' }}>
-              Secondary project 2
-            </p>
-          </div>
-        </RevealOnScroll>
-      </div>
+      <MasonryGallery>
+        {featuredWorkVideos.map((item, i) => (
+          <RevealOnScroll key={item.id} stagger={i * 120}>
+            <div
+              style={{
+                transition: 'transform var(--transition-hover)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.02)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              <VideoPlayer src={item.src} title={item.title} />
+              <p
+                style={{
+                  marginTop: 'var(--space-sm)',
+                  color: 'var(--color-text-muted)',
+                  fontSize: 'var(--font-caption)',
+                }}
+              >
+                {item.caption}
+              </p>
+            </div>
+          </RevealOnScroll>
+        ))}
+      </MasonryGallery>
     </section>
   );
 }
