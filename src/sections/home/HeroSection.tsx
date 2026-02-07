@@ -4,7 +4,7 @@ export function HeroSection() {
   return (
     <section
       style={{
-        minHeight: '100vh',
+        minHeight: '85vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

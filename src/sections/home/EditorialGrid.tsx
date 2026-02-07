@@ -7,7 +7,7 @@ export function EditorialGrid() {
   return (
     <section
       style={{
-        minHeight: '110vh',
+        minHeight: 'auto',
         padding: 'var(--section-padding-y) var(--side-margin)',
         maxWidth: 'var(--content-max-width)',
         margin: '0 auto',

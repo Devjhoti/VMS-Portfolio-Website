@@ -10,25 +10,33 @@
   --color-text-primary: #1d1d1f;
   --color-text-muted: #86868b;
 
-  /* Spacing - more generous, Apple-like */
-  --content-max-width: 980px;
-  --side-margin: clamp(2.2rem, 6vw, 5rem);
-  --section-padding-y: clamp(5rem, 14vh, 10rem);
-  --section-spacer: 28vh;
+  /* Spacing - Denser, more content-forward */
+  --content-max-width: 1200px;
+  /* Increased from 980px */
+  --side-margin: clamp(2rem, 5vw, 4rem);
+  --section-padding-y: clamp(3rem, 8vh, 6rem);
+  /* Reduced from 5rem-10rem */
+  --section-spacer: 15vh;
+  /* Reduced from 28vh */
   --space-xs: 0.5rem;
   --space-sm: 1rem;
   --space-md: 2rem;
-  --space-lg: 4rem;
-  --space-xl: 6rem;
-  --space-2xl: 10rem;
+  --space-lg: 3.5rem;
+  /* Slight reduction */
+  --space-xl: 4.5rem;
+  /* Reduced from 6rem */
+  --space-2xl: 7rem;
+  /* Reduced from 10rem */
 
   /* Typography - stronger scale, Apple-inspired */
   /* Typography - Premium Mix */
   --font-family-sans: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-family-serif: "Playfair Display", Georgia, serif;
-  --font-family: var(--font-family-sans); /* Default */
-  
-  --font-weight-extralight: 300; /* Inter equivalent */
+  --font-family: var(--font-family-sans);
+  /* Default */
+
+  --font-weight-extralight: 300;
+  /* Inter equivalent */
   --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
