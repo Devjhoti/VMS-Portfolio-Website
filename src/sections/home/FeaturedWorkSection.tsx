@@ -70,8 +70,8 @@ export function FeaturedWorkSection() {
             </h2>
           </div>
 
-          {featuredWorkVideos.map((video, idx) => (
-            <Carousel3DCard key={video.id} video={video} index={idx} isMobile={isMobile} />
+          {featuredWorkVideos.map((video) => (
+            <Carousel3DCard key={video.id} video={video} isMobile={isMobile} />
           ))}
         </motion.div>
       </div>
@@ -79,7 +79,7 @@ export function FeaturedWorkSection() {
   );
 }
 
-function Carousel3DCard({ video, index, isMobile }: { video: any, index: number, isMobile: boolean }) {
+function Carousel3DCard({ video, isMobile }: { video: any, isMobile: boolean }) {
   return (
     <motion.div
       style={{
