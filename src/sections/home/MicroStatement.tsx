@@ -27,7 +27,7 @@ export function MicroStatement() {
             lineHeight: 'var(--line-height-loose)',
           }}
         >
-          AI advertising that elevates brands into cultural moments.
+          We don't just edit video. We generate reality.
         </p>
       </RevealOnScroll>
       <CopperDivider />

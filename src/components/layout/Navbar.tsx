@@ -23,8 +23,12 @@ export function Navbar() {
         padding: `var(--space-md) var(--side-margin)`,
         maxWidth: 'var(--content-max-width)',
         margin: '0 auto',
-        transition: 'background var(--transition-hover)',
-        background: scrolled ? 'var(--color-navy-base)' : 'transparent',
+        transition: 'all var(--transition-hover)',
+        background: scrolled ? 'rgba(29, 38, 61, 0.85)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid transparent',
+        boxShadow: scrolled ? '0 4px 30px rgba(0, 0, 0, 0.1)' : 'none',
       }}
     >
       <a href="/" style={{ textDecoration: 'none', color: 'inherit', letterSpacing: 'var(--letter-spacing-wide)' }}>

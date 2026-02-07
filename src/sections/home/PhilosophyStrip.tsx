@@ -1,9 +1,9 @@
 import { RevealOnScroll } from '../../components/ui/RevealOnScroll';
 
 const statements = [
-  'We believe in the intersection of AI and human creativity.',
-  'Every frame is crafted with intention.',
-  'Advertising that feels like art.',
+  'Beyond the limitations of the physical lens.',
+  'Neural radiance meeting human emotion.',
+  'Impossible shots, rendered real.',
 ];
 
 export function PhilosophyStrip() {
@@ -25,7 +25,9 @@ export function PhilosophyStrip() {
           <p
             style={{
               fontSize: 'var(--font-section-title)',
-              fontWeight: 'var(--font-weight-light)',
+              fontFamily: 'var(--font-family-serif)',
+              fontStyle: 'italic',
+              fontWeight: '400',
               lineHeight: 'var(--line-height-loose)',
               margin: 0,
               maxWidth: '40ch',

@@ -26,6 +26,18 @@ export function FeaturedWorkSection() {
           Featured Work
         </h2>
       </RevealOnScroll>
+      <RevealOnScroll stagger={100}>
+        <p style={{
+          fontSize: 'var(--font-body)',
+          color: 'var(--color-text-muted)',
+          marginBottom: 'var(--space-lg)',
+          marginTop: '-var(--space-md)',
+          maxWidth: '40ch',
+          lineHeight: 'var(--line-height-loose)',
+        }}>
+          A curation of neural cinematography and generative visual effects.
+        </p>
+      </RevealOnScroll>
 
       <MasonryGallery>
         {featuredWorkVideos.map((item, i) => (

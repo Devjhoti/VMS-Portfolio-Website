@@ -23,13 +23,17 @@
   --space-2xl: 10rem;
 
   /* Typography - stronger scale, Apple-inspired */
-  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", system-ui, sans-serif;
-  --font-weight-extralight: 200;
+  /* Typography - Premium Mix */
+  --font-family-sans: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-family-serif: "Playfair Display", Georgia, serif;
+  --font-family: var(--font-family-sans); /* Default */
+  
+  --font-weight-extralight: 300; /* Inter equivalent */
   --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
-  --letter-spacing-tight: -0.03em;
-  --letter-spacing-wide: 0.03em;
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-wide: 0.04em;
   --font-hero: clamp(3.5rem, 11vw, 6.5rem);
   --font-section-title: clamp(1.75rem, 3.5vw, 2.5rem);
   --font-body: clamp(0.9375rem, 1.2vw, 1.0625rem);

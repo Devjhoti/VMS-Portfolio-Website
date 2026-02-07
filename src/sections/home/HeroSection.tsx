@@ -18,7 +18,9 @@ export function HeroSection() {
         <h1
           style={{
             fontSize: 'var(--font-hero)',
-            fontWeight: 'var(--font-weight-extralight)',
+            fontWeight: '400',
+            fontFamily: 'var(--font-family-serif)',
+            fontStyle: 'italic',
             lineHeight: 'var(--line-height-tight)',
             letterSpacing: 'var(--letter-spacing-tight)',
             margin: 0,
@@ -38,10 +40,10 @@ export function HeroSection() {
             margin: 0,
             marginBottom: 'var(--space-xl)',
             textAlign: 'center',
-            maxWidth: '30ch',
+            maxWidth: '32ch',
           }}
         >
-          AI-powered advertising. Cinematic storytelling.
+          We craft hyper-realistic digital humans and impossible environments for the next generation of brand storytelling.
         </p>
       </RevealOnScroll>
       <RevealOnScroll stagger={360}>
