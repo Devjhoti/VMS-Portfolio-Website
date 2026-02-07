@@ -23,7 +23,7 @@ export function EditorialGrid() {
       <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
         <div style={{
           position: 'absolute',
-          top: '10vh', // Adjusted to 10vh to balance navbar clearance vs video overlap
+          top: '7vh', // Moved further up
           left: 0,
           right: 0,
           textAlign: 'center',
@@ -120,17 +120,26 @@ function ZigZagItem({ video, index, total, progress }: any) {
         {/* VIDEO */}
         <motion.div style={{
           flex: 1,
-          height: '60vh',
-          boxShadow: '0 40px 80px rgba(0,0,0,0.5)',
+          height: video.isVertical ? '70vh' : '65vh', // Reduced vertical height to safely clear headline
           borderRadius: '4px',
           overflow: 'hidden',
-          background: '#000',
+          // Removed black background and box shadow to look cleaner with 'contain'
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           x: videoX,
-          pointerEvents: 'auto' // Re-enable interaction
+          pointerEvents: 'auto'
         }}>
           <VideoPlayer
             src={video.src}
             title={video.title}
+            style={{
+              objectFit: 'contain', // SHOW FULL VIDEO
+              background: 'transparent',
+              // For vertical videos, we might want to ensure they don't get too wide?
+              // But 'contain' handles that. 'height' is the constraint.
+              maxHeight: '100%'
+            }}
           />
         </motion.div>
 

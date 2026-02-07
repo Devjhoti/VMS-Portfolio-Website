@@ -67,8 +67,9 @@ export function VideoPlayer({ src, poster, title, className = '', style = {} }: 
         style={{
           width: '100%',
           height: '100%',
-          objectFit: 'cover', // Critical for 1:1 aspect ratio
+          objectFit: 'cover', // Default (overridden by style prop if passed)
           display: 'block',
+          ...style // Critical: Allows 'contain' override
         }}
       />
       <div

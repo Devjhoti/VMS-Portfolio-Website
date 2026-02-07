@@ -4,6 +4,7 @@ export interface VideoItem {
   src: string;
   title: string;
   caption: string;
+  isVertical?: boolean;
 }
 
 export const featuredWorkVideos: VideoItem[] = [
@@ -54,6 +55,7 @@ export const editorialVideos: VideoItem[] = [
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354769/Craze_Freak_Warm_Hoodie_jzx110.mp4',
     title: 'Craze Freak',
     caption: 'Craze — Textile Physics & Motion',
+    isVertical: true, // User requested vertical
   },
   {
     id: 'property-lifts',
@@ -66,6 +68,7 @@ export const editorialVideos: VideoItem[] = [
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354774/Raindrops_Jackets_Sweat_Shirts_Promo_mhsj1f.mp4',
     title: 'Raindrops Promo',
     caption: 'Fashion — Kinetic Typography',
+    isVertical: true, // User requested vertical
   },
   {
     id: 'safemet',
@@ -84,6 +87,7 @@ export const editorialVideos: VideoItem[] = [
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354765/Raindrops_tfkyku.mp4',
     title: 'Raindrops',
     caption: 'Lookbook — Digital Catalog',
+    isVertical: true, // User requested vertical
   },
   {
     id: 'regal-furniture-2',
