@@ -1,10 +1,22 @@
-import { RevealOnScroll } from '../../components/ui/RevealOnScroll';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
 export function HeroSection() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+
   return (
-    <section
+    <motion.section
+      ref={ref}
       style={{
-        minHeight: '85vh',
+        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -12,9 +24,12 @@ export function HeroSection() {
         padding: 'var(--section-padding-y) var(--side-margin)',
         maxWidth: 'var(--content-max-width)',
         margin: '0 auto',
+        position: 'relative',
+        opacity,
+        y
       }}
     >
-      <RevealOnScroll stagger={0}>
+      <motion.div style={{ scale, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h1
           style={{
             fontSize: 'var(--font-hero)',
@@ -26,12 +41,12 @@ export function HeroSection() {
             margin: 0,
             marginBottom: 'var(--space-lg)',
             textAlign: 'center',
+            willChange: 'transform' // Performance opt
           }}
         >
           Virtual Model Studio
         </h1>
-      </RevealOnScroll>
-      <RevealOnScroll stagger={180}>
+
         <p
           style={{
             fontSize: 'var(--font-body)',
@@ -45,8 +60,7 @@ export function HeroSection() {
         >
           We craft hyper-realistic digital humans and impossible environments for the next generation of brand storytelling.
         </p>
-      </RevealOnScroll>
-      <RevealOnScroll stagger={360}>
+
         <a
           href="#work"
           style={{
@@ -58,7 +72,7 @@ export function HeroSection() {
         >
           View Work
         </a>
-      </RevealOnScroll>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }
