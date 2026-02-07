@@ -7,7 +7,7 @@ export function FeaturedWorkSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Mobile detection
+  // Mobile detection - kept only for sizing adjustments
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -20,42 +20,9 @@ export function FeaturedWorkSection() {
     offset: ["start start", "end end"]
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-85%"]); // Increased travel for mobile width?
   // Smooth out the scroll physics
   const smoothX = useSpring(x, { damping: 15, stiffness: 100 });
-
-  if (isMobile) {
-    return (
-      <section id="work" style={{ padding: 'var(--section-padding-y) var(--side-margin)' }}>
-        <div style={{ marginBottom: 'var(--space-xl)' }}>
-          <h2
-            style={{
-              fontSize: '3rem',
-              fontWeight: 'var(--font-weight-light)',
-              lineHeight: 1,
-              margin: 0
-            }}
-          >
-            Featured<br />
-            <span style={{ fontFamily: 'var(--font-family-serif)', fontStyle: 'italic' }}>Work</span>
-          </h2>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2xl)' }}>
-          {featuredWorkVideos.map((video) => (
-            <div key={video.id}>
-              <div style={{ borderRadius: '4px', overflow: 'hidden' }}>
-                <VideoPlayer src={video.src} title={video.title} />
-              </div>
-              <div style={{ marginTop: '1rem' }}>
-                <h3 style={{ margin: 0, fontSize: '1.2rem' }}>{video.title}</h3>
-                <p style={{ margin: 0, opacity: 0.6, fontSize: '0.9rem' }}>{video.caption}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    )
-  }
 
   return (
     <section
@@ -77,15 +44,17 @@ export function FeaturedWorkSection() {
       }}>
         <motion.div style={{
           display: 'flex',
-          gap: '5vw', // Increased gap
-          paddingLeft: '10vw',
+          gap: isMobile ? '10vw' : '5vw',
+          paddingLeft: isMobile ? '5vw' : '10vw',
           x: smoothX
         }}>
           <div style={{
             flexShrink: 0,
-            width: '25vw', // Reduced title width
+            width: isMobile ? '80vw' : '25vw', // Use full width intro for mobile
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            justifyContent: isMobile ? 'center' : 'flex-start',
+            textAlign: isMobile ? 'center' : 'left'
           }}>
             <h2
               style={{
@@ -102,7 +71,7 @@ export function FeaturedWorkSection() {
           </div>
 
           {featuredWorkVideos.map((video, idx) => (
-            <Carousel3DCard key={video.id} video={video} index={idx} />
+            <Carousel3DCard key={video.id} video={video} index={idx} isMobile={isMobile} />
           ))}
         </motion.div>
       </div>
@@ -110,12 +79,12 @@ export function FeaturedWorkSection() {
   );
 }
 
-function Carousel3DCard({ video, index }: { video: any, index: number }) {
+function Carousel3DCard({ video, index, isMobile }: { video: any, index: number, isMobile: boolean }) {
   return (
     <motion.div
       style={{
-        width: '45vw', // Reduced from 60vw to be less overwhelming
-        height: '60vh', // Reduced height to fit UI better
+        width: isMobile ? '80vw' : '45vw', // Wider cards on mobile
+        height: '60vh',
         flexShrink: 0,
         position: 'relative',
         perspective: '1000px',
