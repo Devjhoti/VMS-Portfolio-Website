@@ -23,20 +23,21 @@ export function EditorialGrid() {
       <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
         <div style={{
           position: 'absolute',
-          top: '5vh',
+          top: '10vh', // Adjusted to 10vh to balance navbar clearance vs video overlap
           left: 0,
           right: 0,
           textAlign: 'center',
           zIndex: 10
         }}>
           <h2 style={{
-            fontSize: 'clamp(2rem, 4vw, 3rem)',
+            fontSize: 'clamp(3rem, 5vw, 4.5rem)',
             fontWeight: 'var(--font-weight-light)',
             letterSpacing: 'var(--letter-spacing-tight)',
-            color: 'var(--color-text-primary)', // ensure visibility on any bg
-            textShadow: '0 2px 20px rgba(0,0,0,0.2)'
+            color: 'var(--color-text-primary)',
+            lineHeight: 1,
+            textShadow: '0 2px 20px rgba(0,0,0,0.1)'
           }}>
-            Editorial Series
+            Editorial <span style={{ fontFamily: 'var(--font-family-serif)', fontStyle: 'italic' }}>Series</span>
           </h2>
         </div>
 
@@ -100,7 +101,8 @@ function ZigZagItem({ video, index, total, progress }: any) {
         justifyContent: 'center',
         opacity,
         pointerEvents: 'none', // Pass-through for scrolling
-        zIndex: index // Ensure stacking order
+        zIndex: index, // Ensure stacking order
+        paddingTop: '15vh' // Push content down to clear the headline
       }}
     >
       <div
