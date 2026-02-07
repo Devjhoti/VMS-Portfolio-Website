@@ -66,10 +66,9 @@ export function VideoPlayer({ src, poster, title, className = '', style = {} }: 
         onEnded={handleVideoEnded}
         style={{
           width: '100%',
-          height: '100%', // Fill container
-          objectFit: 'cover', // Pivot for vertical/square videos
+          height: '100%',
+          objectFit: 'cover', // Critical for 1:1 aspect ratio
           display: 'block',
-          verticalAlign: 'top',
         }}
       />
       <div

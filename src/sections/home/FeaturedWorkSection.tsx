@@ -127,15 +127,28 @@ function Carousel3DCard({ video, index }: { video: any, index: number }) {
       <motion.div
         style={{
           width: '100%',
-          aspectRatio: '1/1', // Square Aspect Ratio as requested
+          aspectRatio: '1/1', // STRICTLY SQUARE
           overflow: 'hidden',
           borderRadius: '4px',
           boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
-          background: '#000'
+          background: '#000',
+          position: 'relative' // Anchor for absolute video
         }}
         whileHover={{ scale: 1.02 }}
       >
-        <VideoPlayer src={video.src} title={video.title} />
+        {/* Force video to fill square container */}
+        <VideoPlayer
+          src={video.src}
+          title={video.title}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover' // Zooms to fill square
+          }}
+        />
       </motion.div>
 
       <div style={{

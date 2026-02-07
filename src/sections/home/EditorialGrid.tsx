@@ -5,8 +5,7 @@ import { editorialVideos } from '../../data/videos';
 
 export function EditorialGrid() {
   const containerRef = useRef(null);
-  // This section needs to be TALL to allow for individual moments
-  // 6 videos * 100vh = 600vh minimum to give each time to breathe
+  // INCREASE HEIGHT: 200vh per video for a very slow, deliberate pace
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
@@ -16,7 +15,7 @@ export function EditorialGrid() {
     <section
       ref={containerRef}
       style={{
-        height: `${editorialVideos.length * 100}vh`,
+        height: `${editorialVideos.length * 200}vh`,
         position: 'relative',
         background: 'var(--color-bg-primary)'
       }}
@@ -34,8 +33,8 @@ export function EditorialGrid() {
             fontSize: 'clamp(2rem, 4vw, 3rem)',
             fontWeight: 'var(--font-weight-light)',
             letterSpacing: 'var(--letter-spacing-tight)',
-            mixBlendMode: 'difference', // Cool effect against videos
-            color: 'white'
+            color: 'var(--color-text-primary)', // ensure visibility on any bg
+            textShadow: '0 2px 20px rgba(0,0,0,0.2)'
           }}>
             Editorial Series
           </h2>
@@ -56,36 +55,36 @@ export function EditorialGrid() {
 }
 
 function ZigZagItem({ video, index, total, progress }: any) {
-  // Determine the active window for this specific item
-  // e.g., if total=5, item 0 is active from 0 to 0.2
-  const start = index / total;
-  const end = (index + 1) / total;
-  const fadeWindow = 0.05; // Quick fade in/out
+  const slotSize = 1 / total;
+  const start = index * slotSize;
+  const end = (index + 1) * slotSize;
 
-  // Visibility: fade in at start, fade out at end
+  // Fade out only during the last 20% of the item's scroll slot
+  const fadeOutStart = end - (slotSize * 0.2);
+
+  // 1. Opacity: Enter at 100%, Stay 100%, Fade out at very end
   const opacity = useTransform(
     progress,
-    [start, start + fadeWindow, end - fadeWindow, end],
-    [0, 1, 1, 0]
+    [start, fadeOutStart, end],
+    [1, 1, 0]
   );
 
-  // Determines side: Even = Left, Odd = Right
   const isLeft = index % 2 === 0;
 
-  // Movement Logic
-  // Enter: Slide in from side (X: -100% or 100% -> 0)
-  // Exit: Slide out to opposite side or just fade (Let's stick for a moment then move)
-  const xEntry = useTransform(
+  // 2. Motion: Enter -> Hold -> Stay
+  // Moves from side to center in first 20% of slot
+  const motionEnd = start + (slotSize * 0.2);
+
+  const videoX = useTransform(
     progress,
-    [start, start + 0.1],
-    [isLeft ? "-100%" : "100%", "0%"]
+    [start, motionEnd, end],
+    [isLeft ? "-100vw" : "100vw", "0vw", "0vw"]
   );
 
-  // Text Logic: Flies in slightly AFTER video
-  const textXEntry = useTransform(
+  const textX = useTransform(
     progress,
-    [start + 0.05, start + 0.15],
-    [isLeft ? "100%" : "-100%", "0%"]
+    [start, motionEnd, end],
+    [isLeft ? "100vw" : "-100vw", "0vw", "0vw"]
   );
 
   return (
@@ -100,38 +99,48 @@ function ZigZagItem({ video, index, total, progress }: any) {
         alignItems: 'center',
         justifyContent: 'center',
         opacity,
-        pointerEvents: 'none' // allow click through if needed
+        pointerEvents: 'none', // Pass-through for scrolling
+        zIndex: index // Ensure stacking order
       }}
     >
-      <div style={{
-        display: 'flex',
-        flexDirection: isLeft ? 'row' : 'row-reverse', // Flip layout based on index
-        alignItems: 'center',
-        gap: '8vw',
-        width: '80%',
-        maxWidth: '1400px'
-      }}>
-        {/* VIDEO BLOCK */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: isLeft ? 'row' : 'row-reverse',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '4rem',
+          width: '100%',
+          maxWidth: '1600px',
+          padding: '0 5vw'
+        }}
+      >
+        {/* VIDEO */}
         <motion.div style={{
-          flex: '1 1 60%',
-          x: xEntry,
+          flex: 1,
+          height: '60vh',
           boxShadow: '0 40px 80px rgba(0,0,0,0.5)',
           borderRadius: '4px',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          background: '#000',
+          x: videoX,
+          pointerEvents: 'auto' // Re-enable interaction
         }}>
-          <div style={{ aspectRatio: '16/9' }}>
-            <VideoPlayer src={video.src} title={video.title} />
-          </div>
+          <VideoPlayer
+            src={video.src}
+            title={video.title}
+          />
         </motion.div>
 
-        {/* TEXT BLOCK */}
+        {/* TEXT */}
         <motion.div style={{
-          flex: '1 1 30%',
-          x: textXEntry,
-          textAlign: isLeft ? 'left' : 'right'
+          flex: 1,
+          textAlign: isLeft ? 'left' : 'right',
+          x: textX,
+          pointerEvents: 'auto' // Re-enable interaction
         }}>
           <h3 style={{
-            fontSize: '3rem',
+            fontSize: 'clamp(2rem, 4vw, 3.5rem)',
             margin: 0,
             marginBottom: '1rem',
             lineHeight: 1
@@ -141,7 +150,7 @@ function ZigZagItem({ video, index, total, progress }: any) {
             fontSize: '1rem',
             color: 'var(--color-text-muted)',
             fontFamily: 'var(--font-family-mono)',
-            maxWidth: '30ch',
+            maxWidth: '40ch',
             marginLeft: isLeft ? 0 : 'auto'
           }}>
             {video.caption}
