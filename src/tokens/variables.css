@@ -11,7 +11,7 @@
   --color-text-muted: #86868b;
 
   /* Spacing - Denser, more content-forward */
-  --content-max-width: 1200px;
+  --content-max-width: 1600px;
   /* Increased from 980px */
   --side-margin: clamp(2rem, 5vw, 4rem);
   --section-padding-y: clamp(3rem, 8vh, 6rem);
