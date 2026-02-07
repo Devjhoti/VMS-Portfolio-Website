@@ -26,9 +26,10 @@ export function Footer() {
             gap: 'var(--space-md)',
           }}
         >
-          <span style={{ fontSize: 'var(--font-caption)', opacity: 0.8 }}>
-            VM — Full circular logo placeholder
-          </span>
+          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
+            <span style={{ fontSize: '1.25rem', fontWeight: 500, letterSpacing: '-0.02em' }}>Virtual Model</span>
+            <span style={{ fontSize: '1.25rem', fontFamily: 'var(--font-family-serif)', fontStyle: 'italic', opacity: 0.7 }}>Studio</span>
+          </div>
           <nav>
             <ul
               style={{

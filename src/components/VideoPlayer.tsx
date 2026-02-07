@@ -15,9 +15,10 @@ interface VideoPlayerProps {
   poster?: string;
   title?: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-export function VideoPlayer({ src, poster, title, className = '' }: VideoPlayerProps) {
+export function VideoPlayer({ src, poster, title, className = '', style = {} }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showPlayOverlay, setShowPlayOverlay] = useState(true);
@@ -50,6 +51,7 @@ export function VideoPlayer({ src, poster, title, className = '' }: VideoPlayerP
         cursor: 'pointer',
         overflow: 'hidden',
         background: 'var(--color-bg-secondary)',
+        ...style // Allow overrides
       }}
       onClick={togglePlay}
     >
@@ -64,7 +66,8 @@ export function VideoPlayer({ src, poster, title, className = '' }: VideoPlayerP
         onEnded={handleVideoEnded}
         style={{
           width: '100%',
-          height: 'auto',
+          height: '100%', // Fill container
+          objectFit: 'cover', // Pivot for vertical/square videos
           display: 'block',
           verticalAlign: 'top',
         }}

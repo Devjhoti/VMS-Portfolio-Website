@@ -36,6 +36,28 @@ body::before {
   mix-blend-mode: multiply;
 }
 
+/* Navbar Premium Links */
+.nav-link {
+  position: relative;
+  text-decoration: none;
+  padding-bottom: 4px;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 1px;
+  background-color: currentColor;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
 ::selection {
   background: var(--color-copper);
   color: #fff;

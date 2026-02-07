@@ -1,3 +1,4 @@
+// 16:9 Wide Videos (Previously in Editorial or Mixed) -> Now strictly for Editorial "ZigZag"
 export interface VideoItem {
   id: string;
   src: string;
@@ -6,6 +7,7 @@ export interface VideoItem {
 }
 
 export const featuredWorkVideos: VideoItem[] = [
+  // Moving Square Videos here for the 3D Carousel (Album Cover Look)
   {
     id: 'pran-sauce',
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354760/Pran_Sauce_Video_i0pe9n.mp4',
@@ -24,15 +26,35 @@ export const featuredWorkVideos: VideoItem[] = [
     title: 'Real Fruit Power',
     caption: 'Dabur — Liquid Simulation & Composition',
   },
+  // Moved from Editorial (Square-ish product renders)
   {
-    id: 'craze-freak',
-    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354769/Craze_Freak_Warm_Hoodie_jzx110.mp4',
-    title: 'Craze Freak',
-    caption: 'Craze — Textile Physics & Motion',
+    id: 'embra-tshirt-black',
+    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354772/Gk_Tshirt_Black_yfzoav.mp4',
+    title: 'EMBRA',
+    caption: 'EMBRA — Dark Mode Aesthetic',
+  },
+  {
+    id: 'embra-tshirt-bisk',
+    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354759/Gk_T-Shirt_Bisk_yc9cfl.mp4',
+    title: 'EMBRA Beige',
+    caption: 'Studio — Light Setup Reveal',
+  },
+  {
+    id: 'booty-botique',
+    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354761/Demo_For_Booty_Botique_aawqja.mp4',
+    title: 'Booty Botique',
+    caption: 'Fitness — High Energy Promo',
   },
 ];
 
 export const editorialVideos: VideoItem[] = [
+  // Wide Videos for the ZigZag Scroll
+  {
+    id: 'craze-freak', // Moved from Featured
+    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354769/Craze_Freak_Warm_Hoodie_jzx110.mp4',
+    title: 'Craze Freak',
+    caption: 'Craze — Textile Physics & Motion',
+  },
   {
     id: 'property-lifts',
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354784/Property_Lifts_Video_10_upomrf.mp4',
@@ -64,12 +86,6 @@ export const editorialVideos: VideoItem[] = [
     caption: 'Lookbook — Digital Catalog',
   },
   {
-    id: 'embra-tshirt-black',
-    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354772/Gk_Tshirt_Black_yfzoav.mp4',
-    title: 'EMBRA',
-    caption: 'EMBRA — Dark Mode Aesthetic',
-  },
-  {
     id: 'regal-furniture-2',
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354775/Regal_Furniture_Demo_Video_2_kepk5q.mp4',
     title: 'Regal Furniture',
@@ -80,17 +96,5 @@ export const editorialVideos: VideoItem[] = [
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354776/Regal_Furniture_Demo_1_Sound_Improved_bwmkdj.mp4',
     title: 'Regal Suite',
     caption: 'Interior — Texture detailing',
-  },
-  {
-    id: 'embra-tshirt-bisk',
-    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354759/Gk_T-Shirt_Bisk_yc9cfl.mp4',
-    title: 'EMBRA Beige',
-    caption: 'Studio — Light Setup Reveal',
-  },
-  {
-    id: 'booty-botique',
-    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354761/Demo_For_Booty_Botique_aawqja.mp4',
-    title: 'Booty Botique',
-    caption: 'Fitness — High Energy Promo',
   },
 ];

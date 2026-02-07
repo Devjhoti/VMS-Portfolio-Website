@@ -31,8 +31,9 @@ export function Navbar() {
         boxShadow: scrolled ? '0 4px 30px rgba(0, 0, 0, 0.1)' : 'none',
       }}
     >
-      <a href="/" style={{ textDecoration: 'none', color: 'inherit', letterSpacing: 'var(--letter-spacing-wide)' }}>
-        VM
+      <a href="/" style={{ textDecoration: 'none', color: scrolled ? 'var(--color-silver)' : 'var(--color-text-primary)', display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
+        <span style={{ fontSize: '1rem', fontWeight: 500, letterSpacing: '-0.02em' }}>Virtual Model</span>
+        <span style={{ fontSize: '1rem', fontFamily: 'var(--font-family-serif)', fontStyle: 'italic', opacity: 0.8 }}>Studio</span>
       </a>
       <ul
         style={{
@@ -45,9 +46,9 @@ export function Navbar() {
           fontWeight: 'var(--font-weight-light)',
         }}
       >
-        <li><a href="#work" style={{ color: scrolled ? 'var(--color-silver)' : 'var(--color-text-primary)' }}>Work</a></li>
-        <li><a href="#about" style={{ color: scrolled ? 'var(--color-silver)' : 'var(--color-text-primary)' }}>About</a></li>
-        <li><a href="#contact" style={{ color: scrolled ? 'var(--color-silver)' : 'var(--color-text-primary)' }}>Contact</a></li>
+        <li><a href="#work" className="nav-link" style={{ color: scrolled ? 'var(--color-silver)' : 'var(--color-text-primary)' }}>Work</a></li>
+        <li><a href="#about" className="nav-link" style={{ color: scrolled ? 'var(--color-silver)' : 'var(--color-text-primary)' }}>About</a></li>
+        <li><a href="#contact" className="nav-link" style={{ color: scrolled ? 'var(--color-silver)' : 'var(--color-text-primary)' }}>Contact</a></li>
       </ul>
     </nav>
   );

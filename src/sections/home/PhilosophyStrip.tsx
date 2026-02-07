@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 const statements = [
-  'Beyond the limitations of the physical lens.',
+  'Where technology meets craft.', // New Statement inserted as requested to replace "boring" text
   'Neural radiance meeting human emotion.',
   'Impossible shots, rendered real.',
 ];
@@ -15,54 +15,69 @@ export function PhilosophyStrip() {
   });
 
   return (
-    <section ref={containerRef} style={{ minHeight: '150vh', position: 'relative' }}>
+    <section ref={containerRef} style={{ minHeight: '300vh', position: 'relative', zIndex: 11, background: 'var(--color-bg-primary)' }}>
       <div style={{
         position: 'sticky',
-        top: '30vh',
+        top: 0,
+        height: '100vh',
         display: 'flex',
-        flexDirection: 'column',
+        justifyContent: 'center',
         alignItems: 'center',
-        gap: 'var(--space-xl)',
-        overflow: 'hidden',
-        padding: '0 var(--side-margin)'
+        overflow: 'hidden'
       }}>
-        {statements.map((text, i) => {
-          // Determine opacity based on scroll position of the entire section
-          // Each text fades in and out at different stages
-          const start = i / statements.length;
-          const end = (i + 1) / statements.length;
-          const opacity = useTransform(scrollYProgress,
-            [start, start + 0.1, end - 0.1, end],
-            [0.2, 1, 1, 0.2]
-          );
+        {/* Background Vortex Effect */}
+        <motion.div
+          style={{
+            position: 'absolute',
+            width: '1000px',
+            height: '1000px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)',
+            rotate: useTransform(scrollYProgress, [0, 1], [0, 360]),
+            scale: useTransform(scrollYProgress, [0, 0.5, 1], [0.5, 1.5, 0.5])
+          }}
+        />
 
-          const y = useTransform(scrollYProgress,
-            [start, end],
-            [50, -50]
-          );
-
-          return (
-            <motion.p
-              key={i}
-              style={{
-                fontSize: 'var(--font-section-title)',
-                fontFamily: 'var(--font-family-serif)',
-                fontStyle: 'italic',
-                fontWeight: '400',
-                lineHeight: 'var(--line-height-loose)',
-                textAlign: 'center',
-                maxWidth: '40ch',
-                opacity,
-                y,
-                position: 'absolute', // Stack them on top of each other
-                top: 0
-              }}
-            >
-              {text}
-            </motion.p>
-          )
-        })}
+        {statements.map((text, i) => (
+          <LiquidText key={i} text={text} index={i} total={statements.length} progress={scrollYProgress} />
+        ))}
       </div>
     </section>
   );
+}
+
+function LiquidText({ text, index, total, progress }: any) {
+  const step = 1 / total;
+  const start = index * step;
+  const end = (index + 1) * step;
+
+  // Opacity with a sharp "cut"
+  const opacity = useTransform(progress, [start, start + 0.1, end - 0.1, end], [0, 1, 1, 0]);
+
+  // The "Liquid" Distortion
+  // We scale Y massively while blurring to simulate motion blur/stretch
+  const scaleY = useTransform(progress, [start, start + 0.1, end - 0.1, end], [4, 1, 1, 4]);
+  const filter = useTransform(progress, [start, start + 0.1, end - 0.1, end], ["blur(10px)", "blur(0px)", "blur(0px)", "blur(10px)"]);
+  const y = useTransform(progress, [start, end], [100, -100]); // Subtle rise
+
+  return (
+    <motion.h2
+      style={{
+        position: 'absolute',
+        fontSize: 'clamp(3rem, 6vw, 6rem)',
+        fontFamily: 'var(--font-family-serif)',
+        fontStyle: 'italic',
+        textAlign: 'center',
+        maxWidth: '60%',
+        margin: 0,
+        opacity,
+        scaleY,
+        filter,
+        y,
+        willChange: 'transform, opacity'
+      }}
+    >
+      {text}
+    </motion.h2>
+  )
 }
