@@ -67,10 +67,10 @@ export function VisionArchitectureSection() {
                }
                .vision-divider {
                  width: 1px;
-                 height: 400px;
+                 height: 550px;
                  background-color: var(--color-text-primary);
                  opacity: 0.2;
-                 margin-top: var(--space-xl);
+                 margin-top: 100px;
                }
                @media (max-width: 900px) {
                  .vision-container {
@@ -124,11 +124,21 @@ export function VisionArchitectureSection() {
                             <p style={{
                                 fontSize: '1.2rem',
                                 opacity: 0.6,
-                                margin: '0 0 var(--space-lg) 0',
+                                margin: '0 0 var(--space-xs) 0',
                                 fontWeight: 500
                             }}>
                                 CEO, Virtual Model Studio
                             </p>
+                            <a href="mailto:virtualmodelstudiobd@gmail.com" style={{
+                                fontSize: '1rem',
+                                opacity: 0.8,
+                                margin: '0 0 var(--space-lg) 0',
+                                fontWeight: 400,
+                                color: 'inherit',
+                                textDecoration: 'none'
+                            }}>
+                                virtualmodelstudiobd@gmail.com
+                            </a>
 
                             <p style={{
                                 fontSize: '1.1rem',
@@ -192,11 +202,21 @@ export function VisionArchitectureSection() {
                             <p style={{
                                 fontSize: '1.2rem',
                                 opacity: 0.6,
-                                margin: '0 0 var(--space-lg) 0',
+                                margin: '0 0 var(--space-xs) 0',
                                 fontWeight: 500
                             }}>
                                 CEO, PKG IT
                             </p>
+                            <a href="mailto:Pranabprg@gmail.com" style={{
+                                fontSize: '1rem',
+                                opacity: 0.8,
+                                margin: '0 0 var(--space-lg) 0',
+                                fontWeight: 400,
+                                color: 'inherit',
+                                textDecoration: 'none'
+                            }}>
+                                Pranabprg@gmail.com
+                            </a>
 
                             <p style={{
                                 fontSize: '1.1rem',
