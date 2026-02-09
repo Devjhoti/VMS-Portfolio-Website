@@ -8,7 +8,28 @@ export interface VideoItem {
 }
 
 export const featuredWorkVideos: VideoItem[] = [
-  // Moving Square Videos here for the 3D Carousel (Album Cover Look)
+  {
+    id: 'chanel-perfume',
+    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770579190/Chanel_Perfume_Video_dztprl.mp4',
+    title: 'Chanel Perfume',
+    caption: 'Chanel — 3D Product Animation'
+  },
+  {
+    id: 'ralph-lauren',
+    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770595783/Ralph_Lauren_Short_Video_dfhwc2.mp4',
+    title: 'Ralph Lauren',
+    caption: 'Ralph Lauren — Cinematic Showcase'
+  },
+  {
+    id: 'levis',
+    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770596095/Levi_s_nlemhy.mp4',
+    title: "Levi's",
+    caption: "Levi's — Dynamic Fashion Edit"
+  }
+];
+
+export const editorialVideos: VideoItem[] = [
+  // Moved from Featured Work (Square-ish / 4:5 type videos)
   {
     id: 'pran-sauce',
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354760/Pran_Sauce_Video_i0pe9n.mp4',
@@ -27,7 +48,6 @@ export const featuredWorkVideos: VideoItem[] = [
     title: 'Real Fruit Power',
     caption: 'Dabur — Liquid Simulation & Composition',
   },
-  // Moved from Editorial (Square-ish product renders)
   {
     id: 'embra-tshirt-black',
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354772/Gk_Tshirt_Black_yfzoav.mp4',
@@ -46,16 +66,13 @@ export const featuredWorkVideos: VideoItem[] = [
     title: 'Booty Botique',
     caption: 'Fitness — High Energy Promo',
   },
-];
-
-export const editorialVideos: VideoItem[] = [
-  // Wide Videos for the ZigZag Scroll
+  // Existing Editorial Videos
   {
-    id: 'craze-freak', // Moved from Featured
+    id: 'craze-freak',
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354769/Craze_Freak_Warm_Hoodie_jzx110.mp4',
     title: 'Craze Freak',
     caption: 'Craze — Textile Physics & Motion',
-    isVertical: true, // User requested vertical
+    isVertical: true,
   },
   {
     id: 'property-lifts',
@@ -68,7 +85,7 @@ export const editorialVideos: VideoItem[] = [
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354774/Raindrops_Jackets_Sweat_Shirts_Promo_mhsj1f.mp4',
     title: 'Raindrops Promo',
     caption: 'Fashion — Kinetic Typography',
-    isVertical: true, // User requested vertical
+    isVertical: true,
   },
   {
     id: 'safemet',
@@ -87,7 +104,7 @@ export const editorialVideos: VideoItem[] = [
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354765/Raindrops_tfkyku.mp4',
     title: 'Raindrops',
     caption: 'Lookbook — Digital Catalog',
-    isVertical: true, // User requested vertical
+    isVertical: true,
   },
   {
     id: 'regal-furniture-2',
