@@ -13,12 +13,11 @@ function getThumbnail(videoUrl: string): string {
 interface VideoPlayerProps {
   src: string;
   poster?: string;
-  title?: string;
   className?: string;
   style?: React.CSSProperties;
 }
 
-export function VideoPlayer({ src, poster, title, className = '', style = {} }: VideoPlayerProps) {
+export function VideoPlayer({ src, poster, className = '', style = {} }: VideoPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
