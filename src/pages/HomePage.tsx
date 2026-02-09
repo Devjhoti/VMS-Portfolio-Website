@@ -6,6 +6,7 @@ import { PhilosophyStrip } from '../sections/home/PhilosophyStrip';
 import { EditorialGrid } from '../sections/home/EditorialGrid';
 import { MicroStatement } from '../sections/home/MicroStatement';
 import { FinalCTA } from '../sections/home/FinalCTA';
+import { VisionArchitectureSection } from '../sections/home/VisionArchitectureSection';
 import { Footer } from '../sections/home/Footer';
 
 export function HomePage() {
@@ -18,6 +19,7 @@ export function HomePage() {
       <EditorialGrid />
       <MicroStatement />
       <FinalCTA />
+      <VisionArchitectureSection />
       <Footer />
     </PageLayout>
   );

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1200px;
+            height: 630px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f131f 0%, #1D263D 100%);
+            /* Navy Base Gradient */
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Glassmorphism Circle */
+        .glass-circle {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            filter: blur(80px);
+        }
+
+        .glass-circle-2 {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(181, 142, 125, 0.05);
+            /* Copper tint */
+            border-radius: 50%;
+            bottom: -50px;
+            left: -50px;
+            filter: blur(60px);
+        }
+
+        .content {
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        img {
+            height: 180px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 48px;
+            letter-spacing: -0.02em;
+            font-weight: 300;
+            margin: 0;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 24px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="glass-circle"></div>
+    <div class="glass-circle-2"></div>
+    <div class="content">
+        <!-- VMS Logo -->
+        <img src="./assets/VMS-LOGO-TR.png" alt="VMS Logo" />
+        <h1>Virtual Model Studio</h1>
+        <p>Vision X Architecture</p>
+    </div>
+</body>
+
+</html>

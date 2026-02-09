@@ -96,7 +96,7 @@ function Carousel3DCard({ video, isMobile }: { video: any, isMobile: boolean }) 
       <motion.div
         style={{
           width: '100%',
-          aspectRatio: '1/1', // STRICTLY SQUARE
+          aspectRatio: '16/9', // CHANGED to 16:9 for new videos
           overflow: 'hidden',
           borderRadius: '4px',
           boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
