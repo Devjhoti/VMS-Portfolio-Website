@@ -1,8 +1,35 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
 export function VisionArchitectureSection() {
+    const sectionRef = useRef<HTMLElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start end", "center center"]
+    });
+
+    // Option 1 Revised: Dramatic Convergence
+    // The divider grows from 0 to 100% height
+    const dividerHeight = useTransform(scrollYProgress, [0.2, 0.8], ["0%", "100%"]);
+
+    // CEO Profiles fly in diagonally from far away
+    // Left profile: Comes from bottom-left (far)
+    const leftX = useTransform(scrollYProgress, [0, 0.7], [-800, 0]);
+    const leftY = useTransform(scrollYProgress, [0, 0.7], [300, 0]);
+    const leftOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+
+    // Right profile: Comes from bottom-right (far)
+    const rightX = useTransform(scrollYProgress, [0, 0.7], [800, 0]);
+    const rightY = useTransform(scrollYProgress, [0, 0.7], [300, 0]);
+    const rightOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+
+    // Header scales up from nothing
+    const headerScale = useTransform(scrollYProgress, [0, 0.5], [0.2, 1]);
+    const headerOpacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
+
     return (
         <section
+            ref={sectionRef}
             style={{
                 padding: 'var(--space-2xl) var(--space-md)',
                 background: '#FAF9F6', // Warm off-white to match the reference image
@@ -20,11 +47,12 @@ export function VisionArchitectureSection() {
             }}>
                 {/* Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    style={{ textAlign: 'center', marginBottom: 'var(--space-2xl)' }}
+                    style={{
+                        textAlign: 'center',
+                        marginBottom: 'var(--space-2xl)',
+                        scale: headerScale,
+                        opacity: headerOpacity
+                    }}
                 >
                     <h2 style={{
                         fontFamily: 'var(--font-family-serif)',
@@ -65,12 +93,18 @@ export function VisionArchitectureSection() {
                  justify-content: center;
                  gap: var(--space-2xl);
                }
-               .vision-divider {
+               .vision-divider-container {
                  width: 1px;
                  height: 550px;
+                 margin-top: 100px;
+                 display: flex;
+                 align-items: flex-start;
+                 justify-content: center;
+               }
+               .vision-divider {
+                 width: 1px;
                  background-color: var(--color-text-primary);
                  opacity: 0.2;
-                 margin-top: 100px;
                }
                @media (max-width: 900px) {
                  .vision-container {
@@ -78,10 +112,8 @@ export function VisionArchitectureSection() {
                    align-items: center;
                    gap: var(--space-xl);
                  }
-                 .vision-divider {
-                   width: 100px;
-                   height: 1px;
-                   margin: 0;
+                 .vision-divider-container {
+                   display: none;
                  }
                }
              `}
@@ -90,11 +122,17 @@ export function VisionArchitectureSection() {
                     <div className="vision-container">
                         {/* VMS CEO */}
                         <motion.div
-                            initial={{ opacity: 0, x: -50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', maxWidth: '500px' }}
+                            style={{
+                                flex: 1,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                textAlign: 'center',
+                                maxWidth: '500px',
+                                x: leftX,
+                                y: leftY,
+                                opacity: leftOpacity
+                            }}
                         >
                             <div style={{
                                 width: '280px',
@@ -158,21 +196,28 @@ export function VisionArchitectureSection() {
                         </motion.div>
 
                         {/* Divider */}
-                        <motion.div
-                            initial={{ opacity: 0, scaleY: 0 }}
-                            whileInView={{ opacity: 1, scaleY: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 1, delay: 0.4 }}
-                            className="vision-divider"
-                        />
+                        <div className="vision-divider-container">
+                            <motion.div
+                                style={{
+                                    height: dividerHeight
+                                }}
+                                className="vision-divider"
+                            />
+                        </div>
 
                         {/* PKG IT CEO */}
                         <motion.div
-                            initial={{ opacity: 0, x: 50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', maxWidth: '500px' }}
+                            style={{
+                                flex: 1,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                textAlign: 'center',
+                                maxWidth: '500px',
+                                x: rightX,
+                                y: rightY,
+                                opacity: rightOpacity
+                            }}
                         >
                             <div style={{
                                 width: '280px',
