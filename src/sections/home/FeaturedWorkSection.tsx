@@ -108,7 +108,6 @@ function Carousel3DCard({ video, isMobile }: { video: any, isMobile: boolean }) 
         {/* Force video to fill square container */}
         <VideoPlayer
           src={video.src}
-          title={video.title}
           style={{
             position: 'absolute',
             top: 0,

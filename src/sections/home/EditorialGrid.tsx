@@ -247,7 +247,6 @@ function GridCard({ video, index }: { video: any, index: number }) {
       }}>
         <VideoPlayer
           src={video.src}
-          title={video.title}
           style={{ objectFit: 'contain', height: '100%', width: '100%' }}
         />
       </div>
@@ -336,7 +335,6 @@ function ZigZagItem({ video, index, total, progress }: any) {
         }}>
           <VideoPlayer
             src={video.src}
-            title={video.title}
             style={{
               objectFit: 'contain', // SHOW FULL VIDEO
               background: 'transparent',
