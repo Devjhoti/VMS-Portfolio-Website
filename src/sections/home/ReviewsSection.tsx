@@ -137,8 +137,16 @@ const REVIEWS: Review[] = [
 
 export function ReviewsSection() {
     const containerRef = useRef<HTMLElement>(null);
-    const isInView = useInView(containerRef, { once: true, amount: 0.3 });
+    const isInView = useInView(containerRef, { once: true, amount: 0.2 });
     const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     // We no longer track "read" reviews or stack them. 
     // The only interaction state is whether a review is selected (modal open).
@@ -148,45 +156,18 @@ export function ReviewsSection() {
             ref={containerRef}
             style={{
                 position: 'relative',
-                height: '100vh',
-                overflow: 'hidden',
+                minHeight: '100vh', // Allow scroll on mobile
+                height: isMobile ? 'auto' : '100vh',
+                overflow: isMobile ? 'visible' : 'hidden', // Allow scroll on mobile
                 background: '#0F1115',
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
+                justifyContent: isMobile ? 'flex-start' : 'center',
                 perspective: '1000px',
+                padding: isMobile ? '6rem 1rem 4rem' : '0'
             }}
         >
-            {/* Curtain Reveal */}
-            <motion.div
-                initial={{ x: 0 }}
-                animate={isInView ? { x: '-100%' } : { x: 0 }}
-                transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '50%',
-                    height: '100%',
-                    background: '#0F1115', // Matches section background
-                    zIndex: 20, // Sit above reviews (z=1) but below modal (z=1000)
-                }}
-            />
-            <motion.div
-                initial={{ x: 0 }}
-                animate={isInView ? { x: '100%' } : { x: 0 }}
-                transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                    width: '50%',
-                    height: '100%',
-                    background: '#0F1115',
-                    zIndex: 20,
-                }}
-            />
-
             {/* Background Atmosphere */}
             <div style={{
                 position: 'absolute',
@@ -195,38 +176,71 @@ export function ReviewsSection() {
                 zIndex: 0
             }} />
 
-            {/* Floating Reviews Container */}
-            <div style={{
-                position: 'absolute',
-                top: 0, left: 0, right: 0, bottom: 0,
-                zIndex: 1
-            }}>
-                <h2 style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    fontFamily: 'var(--font-family-serif)',
-                    color: 'rgba(255,255,255,0.05)',
-                    fontSize: 'clamp(5rem, 15vw, 12rem)',
-                    whiteSpace: 'nowrap',
-                    zIndex: 0,
-                    pointerEvents: 'none',
-                    textAlign: 'center',
-                    lineHeight: 1
-                }}>
-                    CLIENT<br />VOICES
-                </h2>
-
-                {REVIEWS.map((review) => (
-                    <BouncingCard
-                        key={review.id}
-                        review={review}
-                        onClick={() => setSelectedReview(review)}
-                        isPaused={selectedReview !== null}
+            {/* Curtain Reveal */}
+            {!isMobile && (
+                <>
+                    <motion.div
+                        initial={{ x: 0 }}
+                        animate={isInView ? { x: '-100%' } : { x: 0 }}
+                        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+                        style={{
+                            position: 'absolute',
+                            top: 0, left: 0, width: '50%', height: '100%',
+                            background: '#0F1115', zIndex: 20,
+                        }}
                     />
-                ))}
-            </div>
+                    <motion.div
+                        initial={{ x: 0 }}
+                        animate={isInView ? { x: '100%' } : { x: 0 }}
+                        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+                        style={{
+                            position: 'absolute',
+                            top: 0, right: 0, width: '50%', height: '100%',
+                            background: '#0F1115', zIndex: 20,
+                        }}
+                    />
+                </>
+            )}
+
+            <h2 style={{
+                position: isMobile ? 'relative' : 'absolute',
+                top: isMobile ? '0' : '10%',
+                left: isMobile ? '0' : '50%',
+                transform: isMobile ? 'none' : 'translateX(-50%)',
+                fontFamily: 'var(--font-family-serif)',
+                color: 'rgba(255,255,255,0.05)',
+                fontSize: isMobile ? '3rem' : 'clamp(4rem, 10vw, 8rem)',
+                whiteSpace: 'nowrap',
+                zIndex: 1, // Visible above background
+                pointerEvents: 'none',
+                textAlign: 'center',
+                lineHeight: 1,
+                marginBottom: isMobile ? '3rem' : '0'
+            }}>
+                CLIENT VOICES
+            </h2>
+
+            {isMobile ? (
+                <MobileReviewsView
+                    onSelect={setSelectedReview}
+                />
+            ) : (
+                /* Floating Reviews Container */
+                <div style={{
+                    position: 'absolute',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    zIndex: 1
+                }}>
+                    {REVIEWS.map((review) => (
+                        <BouncingCard
+                            key={review.id}
+                            review={review}
+                            onClick={() => setSelectedReview(review)}
+                            isPaused={selectedReview !== null}
+                        />
+                    ))}
+                </div>
+            )}
 
             <AnimatePresence>
                 {selectedReview && (
@@ -237,6 +251,95 @@ export function ReviewsSection() {
                 )}
             </AnimatePresence>
         </section>
+    );
+}
+
+function MobileReviewsView({ onSelect }: { onSelect: (r: Review) => void }) {
+    const [showAll, setShowAll] = useState(false);
+    const displayedReviews = showAll ? REVIEWS : REVIEWS.slice(0, 4);
+
+    return (
+        <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.5rem',
+            width: '100%',
+            maxWidth: '500px',
+            zIndex: 2,
+            position: 'relative'
+        }}>
+            {displayedReviews.map((review, index) => (
+                <motion.div
+                    key={review.id}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    onClick={() => onSelect(review)}
+                    style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        padding: '1.5rem',
+                        borderRadius: '16px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '1rem',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+                        cursor: 'pointer'
+                    }}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <img
+                            src={review.image}
+                            alt={review.name}
+                            style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
+                        />
+                        <div>
+                            <h4 style={{ margin: 0, color: 'white', fontSize: '0.9rem', fontWeight: 600 }}>{review.name}</h4>
+                            <p style={{ margin: 0, color: 'var(--color-copper)', fontSize: '0.75rem' }}>{review.brand}</p>
+                        </div>
+                    </div>
+                    {/* Simplified content for mobile card if needed, effectively same structure */}
+                    <div style={{ display: 'flex', gap: '2px' }}>
+                        {[...Array(review.rating)].map((_, i) => (
+                            <span key={i} style={{ color: '#FFD700', fontSize: '0.8rem' }}>★</span>
+                        ))}
+                    </div>
+                    <p style={{
+                        margin: 0,
+                        color: 'rgba(255,255,255,0.7)',
+                        fontSize: '0.85rem',
+                        fontStyle: 'italic',
+                        lineHeight: 1.4
+                    }}>
+                        "{review.text}"
+                    </p>
+                </motion.div>
+            ))}
+
+            {!showAll && (
+                <motion.button
+                    onClick={() => setShowAll(true)}
+                    whileTap={{ scale: 0.95 }}
+                    style={{
+                        background: 'transparent',
+                        border: '1px solid var(--color-copper)',
+                        color: 'var(--color-copper)',
+                        padding: '1rem 2rem',
+                        borderRadius: '50px',
+                        marginTop: '1rem',
+                        cursor: 'pointer',
+                        fontSize: '0.9rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.1em',
+                        alignSelf: 'center'
+                    }}
+                >
+                    See More
+                </motion.button>
+            )}
+        </div>
     );
 }
 
