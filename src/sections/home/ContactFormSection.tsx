@@ -91,11 +91,17 @@ export function ContactFormSection() {
             {/* Ambient Copper Orbs */}
             <motion.div
                 animate={{
-                    x: [0, 100, 0],
-                    y: [0, -50, 0],
-                    opacity: [0.3, 0.6, 0.3]
+                    x: [0, 150, -50, 100, 0],
+                    y: [0, -100, 50, -50, 0],
+                    scale: [1, 1.2, 0.9, 1.1, 1],
+                    opacity: [0.3, 0.5, 0.3, 0.6, 0.3]
                 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                transition={{
+                    duration: 25,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    times: [0, 0.25, 0.5, 0.75, 1]
+                }}
                 style={{
                     position: 'absolute',
                     top: '20%',
@@ -111,10 +117,16 @@ export function ContactFormSection() {
             />
             <motion.div
                 animate={{
-                    x: [0, -70, 0],
-                    y: [0, 50, 0],
+                    x: [0, -100, 50, -80, 0],
+                    y: [0, 80, -40, 60, 0],
+                    scale: [1, 0.8, 1.1, 0.9, 1],
                 }}
-                transition={{ duration: 15, repeat: Infinity, ease: "linear", delay: 1 }}
+                transition={{
+                    duration: 30,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    times: [0, 0.25, 0.5, 0.75, 1]
+                }}
                 style={{
                     position: 'absolute',
                     bottom: '10%',

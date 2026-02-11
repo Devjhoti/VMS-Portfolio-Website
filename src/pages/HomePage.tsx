@@ -7,6 +7,7 @@ import { EditorialGrid } from '../sections/home/EditorialGrid';
 import { MicroStatement } from '../sections/home/MicroStatement';
 import { FinalCTA } from '../sections/home/FinalCTA';
 import { VisionArchitectureSection } from '../sections/home/VisionArchitectureSection';
+import { ReviewsSection } from '../sections/home/ReviewsSection';
 import { ContactFormSection } from '../sections/home/ContactFormSection';
 import { Footer } from '../sections/home/Footer';
 
@@ -21,6 +22,7 @@ export function HomePage() {
       <MicroStatement />
       <FinalCTA />
       <VisionArchitectureSection />
+      <ReviewsSection />
       <ContactFormSection />
       <Footer />
     </PageLayout>
