@@ -241,7 +241,7 @@ function GridCard({ video, index }: { video: any, index: number }) {
         boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
         // Masonry items don't strictly need aspectRatio if content defines it, 
         // but we'll use 16/9 or vertical based on data to let them stack naturally
-        aspectRatio: video.isVertical ? '4/5' : '16/9',
+        aspectRatio: video.isSquare ? '1/1' : (video.isVertical ? '4/5' : '16/9'),
         background: '#000',
         position: 'relative'
       }}>

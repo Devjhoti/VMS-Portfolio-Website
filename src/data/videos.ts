@@ -5,6 +5,7 @@ export interface VideoItem {
   title: string;
   caption: string;
   isVertical?: boolean;
+  isSquare?: boolean;
 }
 
 export const featuredWorkVideos: VideoItem[] = [
@@ -21,15 +22,29 @@ export const featuredWorkVideos: VideoItem[] = [
     caption: 'Ralph Lauren — Cinematic Showcase'
   },
   {
-    id: 'levis',
-    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770596095/Levi_s_nlemhy.mp4',
-    title: "Levi's",
-    caption: "Levi's — Dynamic Fashion Edit"
+    id: 'gucci-ad',
+    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770807093/Gucci_Ad_Commercial_Video_xegnml.mp4',
+    title: 'GUCCI',
+    caption: 'Gucci — Commercial Edit'
+  },
+  {
+    id: 'poedagar-watch',
+    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770807093/Watch_Video_mcazsa.mp4',
+    title: 'Poedagar Watch',
+    caption: 'Luxury — Timepiece Showcase',
+    isSquare: true
   }
 ];
 
 export const editorialVideos: VideoItem[] = [
   // Moved from Featured Work (Square-ish / 4:5 type videos)
+  {
+    id: 'levis',
+    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770596095/Levi_s_nlemhy.mp4',
+    title: "Levi's",
+    caption: "Levi's — Dynamic Fashion Edit",
+    isSquare: true
+  },
   {
     id: 'pran-sauce',
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354760/Pran_Sauce_Video_i0pe9n.mp4',
@@ -48,6 +63,13 @@ export const editorialVideos: VideoItem[] = [
     title: 'Real Fruit Power',
     caption: 'Dabur — Liquid Simulation & Composition',
   },
+  // Main Embra moved to grid (below index 4)
+  {
+    id: 'booty-botique',
+    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354761/Demo_For_Booty_Botique_aawqja.mp4',
+    title: 'Booty Botique',
+    caption: 'Fitness — High Energy Promo',
+  },
   {
     id: 'embra-tshirt-black',
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354772/Gk_Tshirt_Black_yfzoav.mp4',
@@ -59,12 +81,6 @@ export const editorialVideos: VideoItem[] = [
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354759/Gk_T-Shirt_Bisk_yc9cfl.mp4',
     title: 'EMBRA Beige',
     caption: 'Studio — Light Setup Reveal',
-  },
-  {
-    id: 'booty-botique',
-    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770354761/Demo_For_Booty_Botique_aawqja.mp4',
-    title: 'Booty Botique',
-    caption: 'Fitness — High Energy Promo',
   },
   // Existing Editorial Videos
   {

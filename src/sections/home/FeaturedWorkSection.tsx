@@ -83,7 +83,7 @@ function Carousel3DCard({ video, isMobile }: { video: any, isMobile: boolean }) 
   return (
     <motion.div
       style={{
-        width: isMobile ? '80vw' : '45vw', // Wider cards on mobile
+        width: isMobile ? '80vw' : (video.isSquare ? '50vh' : '45vw'), // Use vh for square to ensure it fits vertically
         height: '60vh',
         flexShrink: 0,
         position: 'relative',
@@ -96,7 +96,7 @@ function Carousel3DCard({ video, isMobile }: { video: any, isMobile: boolean }) 
       <motion.div
         style={{
           width: '100%',
-          aspectRatio: '16/9', // CHANGED to 16:9 for new videos
+          aspectRatio: video.isSquare ? '1/1' : '16/9',
           overflow: 'hidden',
           borderRadius: '4px',
           boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
