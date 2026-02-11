@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { VideoPlayer } from '../../components/VideoPlayer';
 import { editorialVideos } from '../../data/videos';
@@ -11,6 +11,12 @@ export function EditorialGrid() {
   const containerRef = useRef(null);
   const [showGrid, setShowGrid] = useState(false);
 
+  useEffect(() => {
+    const handleOpen = () => setShowGrid(true);
+    window.addEventListener('open-work-grid', handleOpen);
+    return () => window.removeEventListener('open-work-grid', handleOpen);
+  }, []);
+
   // Height strictly for the 4 items
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -20,6 +26,7 @@ export function EditorialGrid() {
   return (
     <>
       <section
+        id="editorial"
         ref={containerRef}
         style={{
           //Height for 4 videos + extra space for the button

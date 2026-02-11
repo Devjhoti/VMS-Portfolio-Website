@@ -3,7 +3,7 @@ import { RevealOnScroll } from '../../components/ui/RevealOnScroll';
 export function FinalCTA() {
   return (
     <section
-      id="contact"
+
       style={{
         minHeight: '70vh',
         padding: 'var(--section-padding-y) var(--side-margin)',

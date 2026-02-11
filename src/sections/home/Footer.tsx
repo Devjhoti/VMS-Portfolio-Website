@@ -42,7 +42,19 @@ export function Footer() {
                 fontWeight: 'var(--font-weight-light)',
               }}
             >
-              <li><a href="#work" style={{ color: 'inherit', textDecoration: 'none' }}>Work</a></li>
+              <li>
+                <a
+                  href="#work"
+                  style={{ color: 'inherit', textDecoration: 'none', cursor: 'pointer' }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.dispatchEvent(new Event('open-work-grid'));
+                    document.getElementById('editorial')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  Work
+                </a>
+              </li>
               <li><a href="#about" style={{ color: 'inherit', textDecoration: 'none' }}>About</a></li>
               <li><a href="#contact" style={{ color: 'inherit', textDecoration: 'none' }}>Contact</a></li>
             </ul>

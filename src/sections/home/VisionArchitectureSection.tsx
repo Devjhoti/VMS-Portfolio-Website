@@ -30,6 +30,7 @@ export function VisionArchitectureSection() {
     return (
         <section
             ref={sectionRef}
+            id="about"
             style={{
                 padding: 'var(--space-2xl) var(--space-md)',
                 background: '#FAF9F6', // Warm off-white to match the reference image

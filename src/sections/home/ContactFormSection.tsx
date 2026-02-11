@@ -64,7 +64,7 @@ export function ContactFormSection() {
     return (
         <section
             ref={containerRef}
-            id="contact-form"
+            id="contact"
             style={{
                 position: 'relative',
                 padding: 'var(--section-padding-y) var(--side-margin)',

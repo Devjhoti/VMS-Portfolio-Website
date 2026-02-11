@@ -86,6 +86,13 @@ export function Navbar() {
                   href={`#${item.toLowerCase()}`}
                   className="nav-link"
                   style={{ color: scrolled ? 'var(--color-silver)' : 'var(--color-text-primary)' }}
+                  onClick={(e) => {
+                    if (item === 'Work') {
+                      e.preventDefault();
+                      window.dispatchEvent(new Event('open-work-grid'));
+                      document.getElementById('editorial')?.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
                 >
                   {item}
                 </a>
@@ -155,6 +162,13 @@ export function Navbar() {
                       fontWeight: '300',
                       fontFamily: 'var(--font-family-serif)',
                       fontStyle: 'italic'
+                    }}
+                    onClick={(e) => {
+                      if (item === 'Work') {
+                        e.preventDefault();
+                        window.dispatchEvent(new Event('open-work-grid'));
+                        document.getElementById('editorial')?.scrollIntoView({ behavior: 'smooth' });
+                      }
                     }}
                   >
                     {item}
