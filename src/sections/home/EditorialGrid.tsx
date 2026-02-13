@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { VideoPlayer } from '../../components/VideoPlayer';
 import { editorialVideos } from '../../data/videos';
 
@@ -10,11 +10,19 @@ const visibleVideos = editorialVideos.slice(0, INITIAL_COUNT);
 export function EditorialGrid() {
   const containerRef = useRef(null);
   const [showGrid, setShowGrid] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleOpen = () => setShowGrid(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024); // Matching other sections
+    checkMobile();
+
     window.addEventListener('open-work-grid', handleOpen);
-    return () => window.removeEventListener('open-work-grid', handleOpen);
+    window.addEventListener('resize', checkMobile);
+    return () => {
+      window.removeEventListener('open-work-grid', handleOpen);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   // Height strictly for the 4 items
@@ -30,7 +38,7 @@ export function EditorialGrid() {
         ref={containerRef}
         style={{
           //Height for 4 videos + extra space for the button
-          height: `${visibleVideos.length * 200}vh`,
+          height: `${visibleVideos.length * 85}vh`,
           position: 'relative',
           background: 'var(--color-bg-primary)'
         }}
@@ -63,6 +71,7 @@ export function EditorialGrid() {
               index={i}
               total={visibleVideos.length} // important for calculating slots correctly
               progress={scrollYProgress}
+              isMobile={isMobile}
             />
           ))}
 
@@ -153,10 +162,21 @@ function SeeMoreButton({ progress, onClick }: { progress: any, onClick: () => vo
 
 
 function VideoGridOverlay({ onClose }: { onClose: () => void }) {
-  // Masonry Layout Logic: Split videos into 3 columns (for desktop)
-  const columns = [[], [], []] as any[];
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Masonry Layout Logic: Split videos into 1 column (mobile) or 3 columns (desktop)
+  const columnCount = isMobile ? 1 : 3;
+  const columns = Array.from({ length: columnCount }, () => [] as any[]);
+
   editorialVideos.forEach((video, i) => {
-    columns[i % 3].push(video);
+    columns[i % columnCount].push(video);
   });
 
   return (
@@ -171,7 +191,7 @@ function VideoGridOverlay({ onClose }: { onClose: () => void }) {
         zIndex: 100, // Top of everything
         background: 'rgba(255,255,255,0.98)',
         overflowY: 'auto', // Scrollable grid
-        padding: '10vh 5vw'
+        padding: isMobile ? '10vh 5vw' : '10vh 5vw' // Keep padding consistent or adjust if needed
       }}
     >
       <motion.div
@@ -180,10 +200,11 @@ function VideoGridOverlay({ onClose }: { onClose: () => void }) {
           gap: '2rem',
           maxWidth: '1600px',
           margin: '0 auto',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          flexDirection: 'row' // Always row, columns handle vertical stacking
         }}
       >
-        {/* Render 3 Columns for Masonry Effect */}
+        {/* Render Columns for Masonry Effect */}
         {columns.map((colVideos, colIndex) => (
           <div key={colIndex} style={{ display: 'flex', flexDirection: 'column', gap: '2rem', flex: 1 }}>
             {colVideos.map((video: any, index: number) => (
@@ -265,38 +286,77 @@ function GridCard({ video, index }: { video: any, index: number }) {
   )
 }
 
-function ZigZagItem({ video, index, total, progress }: any) {
+function ZigZagItem({ video, index, total, progress, isMobile }: any) {
   const slotSize = 1 / total;
   const start = index * slotSize;
   const end = (index + 1) * slotSize;
 
-  // Fade out only during the last 20% of the item's scroll slot
-  const fadeOutStart = end - (slotSize * 0.2);
+  // --- TRIGGER LOGIC (Slide Up "Race") ---
+  // Index 0 starts visible (triggered)
+  const [hasTriggered, setHasTriggered] = useState(index === 0);
 
-  // 1. Opacity: Enter at 100%, Stay 100%, Fade out at very end
-  const opacity = useTransform(
-    progress,
-    [start, fadeOutStart, end],
-    [1, 1, 0]
+  // Trigger slightly before the official start window for responsiveness
+  const triggerPoint = start - (slotSize * 0.1);
+
+  useEffect(() => {
+    if (index === 0) return; // First item always visible
+    const unsubscribe = progress.on("change", (latest: number) => {
+      if (latest >= triggerPoint && !hasTriggered) {
+        setHasTriggered(true);
+      } else if (latest < triggerPoint && hasTriggered) {
+        setHasTriggered(false);
+      }
+    });
+    return unsubscribe;
+  }, [progress, triggerPoint, hasTriggered, index]);
+
+  // Spring Physics for Slide Up
+  // Stiffness 80, Damping 20 -> Nice ease out like pipeline
+  const springConfig = { damping: 20, stiffness: 80, mass: 1 };
+
+  // Initial Y: 50vh (from below) -> 0 (Center)
+  const initialY = '50vh';
+  const targetY = '0vh';
+
+  // Create spring value. Index 0 is always at target. Others start at initial.
+  const springY = useSpring(index === 0 ? targetY : initialY, springConfig);
+
+  useEffect(() => {
+    if (index === 0) return;
+    springY.set(hasTriggered ? targetY : initialY);
+  }, [hasTriggered, springY, index, targetY, initialY]);
+
+
+  // --- OPACITY LOGIC (Still Scroll Linked for smooth cross-fade) ---
+  const opacityInput = index === 0
+    ? [start, end - (slotSize * 0.2), end]
+    : [start - (slotSize * 0.2), start, end - (slotSize * 0.2), end];
+
+  const opacityOutput = index === 0
+    ? [1, 1, 0]
+    : [0, 1, 1, 0];
+
+  const opacity = useTransform(progress,
+    [0, ...opacityInput, 1],
+    [0, ...opacityOutput, 0]
   );
 
   const isLeft = index % 2 === 0;
 
-  // 2. Motion: Enter -> Hold -> Stay
-  // Moves from side to center in first 20% of slot
+  // DESKTOP X-MOTION (Keep original)
   const motionEnd = start + (slotSize * 0.2);
-
-  const videoX = useTransform(
+  const initialX = isLeft ? "-100vw" : "100vw";
+  const xDesktop = useTransform(
     progress,
     [start, motionEnd, end],
-    [isLeft ? "-100vw" : "100vw", "0vw", "0vw"]
+    [initialX, "0vw", "0vw"]
   );
 
-  const textX = useTransform(
-    progress,
-    [start, motionEnd, end],
-    [isLeft ? "100vw" : "-100vw", "0vw", "0vw"]
-  );
+  // Final Selection
+  // Mobile: Triggered Spring Y. Desktop: Scroll X.
+  const finalX = isMobile ? "0vw" : xDesktop;
+  const finalY = isMobile ? (index === 0 ? 0 : springY) : 0;
+  // Note: We use 'springY' (motion value) directly in 'y' prop on mobile.
 
   return (
     <motion.div
@@ -310,18 +370,19 @@ function ZigZagItem({ video, index, total, progress }: any) {
         alignItems: 'center',
         justifyContent: 'center',
         opacity,
-        pointerEvents: 'none', // Pass-through for scrolling
-        zIndex: index, // Ensure stacking order
-        paddingTop: '15vh' // Push content down to clear the headline
+        y: finalY,
+        pointerEvents: 'none',
+        zIndex: index,
+        paddingTop: isMobile ? '20vh' : '15vh'
       }}
     >
       <div
         style={{
           display: 'flex',
-          flexDirection: isLeft ? 'row' : 'row-reverse',
+          flexDirection: isMobile ? 'column' : (isLeft ? 'row' : 'row-reverse'),
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '4rem',
+          gap: isMobile ? '2rem' : '4rem',
           width: '100%',
           maxWidth: '1600px',
           padding: '0 5vw'
@@ -329,49 +390,49 @@ function ZigZagItem({ video, index, total, progress }: any) {
       >
         {/* VIDEO */}
         <motion.div style={{
-          flex: 1,
-          height: video.isVertical ? '70vh' : '65vh', // Reduced vertical height to safely clear headline
+          flex: isMobile ? 'unset' : 1,
+          width: isMobile ? '100%' : 'auto',
+          height: isMobile ? '45vh' : (video.isVertical ? '70vh' : '65vh'),
           borderRadius: '4px',
           overflow: 'hidden',
-          // Removed black background and box shadow to look cleaner with 'contain'
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          x: videoX,
+          x: finalX,
           pointerEvents: 'auto'
         }}>
           <VideoPlayer
             src={video.src}
             style={{
-              objectFit: 'contain', // SHOW FULL VIDEO
+              objectFit: 'contain',
               background: 'transparent',
-              // For vertical videos, we might want to ensure they don't get too wide?
-              // But 'contain' handles that. 'height' is the constraint.
-              maxHeight: '100%'
+              maxHeight: '100%',
+              maxWidth: '100%'
             }}
           />
         </motion.div>
 
         {/* TEXT */}
         <motion.div style={{
-          flex: 1,
-          textAlign: isLeft ? 'left' : 'right',
-          x: textX,
-          pointerEvents: 'auto' // Re-enable interaction
+          flex: isMobile ? 'unset' : 1,
+          width: isMobile ? '100%' : 'auto',
+          textAlign: isMobile ? 'left' : (isLeft ? 'left' : 'right'),
+          x: finalX, // Match text motion
+          pointerEvents: 'auto'
         }}>
           <h3 style={{
-            fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+            fontSize: 'clamp(1.8rem, 4vw, 3.5rem)',
             margin: 0,
-            marginBottom: '1rem',
-            lineHeight: 1
+            marginBottom: '0.5rem',
+            lineHeight: 1.1
           }}>{video.title}</h3>
 
           <p style={{
             fontSize: '1rem',
             color: 'var(--color-text-muted)',
             fontFamily: 'var(--font-family-mono)',
-            maxWidth: '40ch',
-            marginLeft: isLeft ? 0 : 'auto'
+            maxWidth: isMobile ? '100%' : '40ch',
+            marginLeft: isMobile ? 0 : (isLeft ? 0 : 'auto')
           }}>
             {video.caption}
           </p>

@@ -10,6 +10,7 @@ import { VisionArchitectureSection } from '../sections/home/VisionArchitectureSe
 import { ReviewsSection } from '../sections/home/ReviewsSection';
 import { ContactFormSection } from '../sections/home/ContactFormSection';
 import { Footer } from '../sections/home/Footer';
+import { ProductionPipeline } from '../sections/home/ProductionPipeline';
 
 export function HomePage() {
   return (
@@ -17,6 +18,7 @@ export function HomePage() {
       <HeroSection />
       <SpacerSection />
       <FeaturedWorkSection />
+      <ProductionPipeline />
       <PhilosophyStrip />
       <EditorialGrid />
       <MicroStatement />
