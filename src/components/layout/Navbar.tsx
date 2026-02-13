@@ -62,7 +62,7 @@ export function Navbar() {
           boxShadow: scrolled ? '0 4px 30px rgba(0, 0, 0, 0.1)' : 'none',
         }}
       >
-        <a href="/" style={{ textDecoration: 'none', color: scrolled || isMenuOpen ? 'var(--color-silver)' : 'var(--color-text-primary)', display: 'flex', flexDirection: 'column', lineHeight: 1, position: 'relative', zIndex: 101 }}>
+        <a href="/" style={{ textDecoration: 'none', color: scrolled || isMenuOpen ? 'var(--color-silver)' : '#ffffff', display: 'flex', flexDirection: 'column', lineHeight: 1, position: 'relative', zIndex: 101 }}>
           <span style={{ fontSize: '1rem', fontWeight: 500, letterSpacing: '-0.02em' }}>Virtual Model</span>
           <span style={{ fontSize: '1rem', fontFamily: 'var(--font-family-serif)', fontStyle: 'italic', opacity: 0.8 }}>Studio</span>
         </a>
@@ -85,7 +85,7 @@ export function Navbar() {
                 <a
                   href={`#${item.toLowerCase()}`}
                   className="nav-link"
-                  style={{ color: scrolled ? 'var(--color-silver)' : 'var(--color-text-primary)' }}
+                  style={{ color: scrolled ? 'var(--color-silver)' : '#ffffff', textShadow: scrolled ? 'none' : '0 2px 4px rgba(0,0,0,0.3)' }}
                   onClick={(e) => {
                     if (item === 'Work') {
                       e.preventDefault();
@@ -112,7 +112,7 @@ export function Navbar() {
               padding: '10px',
               position: 'relative',
               zIndex: 101, // Above overlay
-              color: scrolled || isMenuOpen ? 'var(--color-silver)' : 'var(--color-text-primary)'
+              color: scrolled || isMenuOpen ? 'var(--color-silver)' : '#ffffff'
             }}
             aria-label="Toggle menu"
           >

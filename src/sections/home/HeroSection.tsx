@@ -19,7 +19,8 @@ export function HeroSection() {
       style={{
         height: '200vh', // Extended scroll track for timing
         position: 'relative',
-        zIndex: 10
+        zIndex: 10,
+        background: '#000' // Dark background fallback
       }}
     >
       <div style={{
@@ -31,6 +32,37 @@ export function HeroSection() {
         justifyContent: 'center',
         overflow: 'hidden'
       }}>
+
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: 0
+          }}
+        >
+          <source src="https://res.cloudinary.com/dxez9kmnn/video/upload/v1770965997/Vms_Website_Banner_f9jkso.mp4" type="video/mp4" />
+        </video>
+
+        {/* Dark Overlay */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0,0,0,0.6)',
+          zIndex: 1
+        }} />
+
         <motion.div
           style={{
             scale,
@@ -38,7 +70,9 @@ export function HeroSection() {
             filter: `blur(${blur})`, // Dynamic blur
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center'
+            alignItems: 'center',
+            position: 'relative', // Ensure it's on top
+            zIndex: 2
           }}
         >
           <h1
@@ -51,7 +85,9 @@ export function HeroSection() {
               letterSpacing: '-0.05em',
               margin: 0,
               textAlign: 'center',
-              willChange: 'transform'
+              willChange: 'transform',
+              color: '#ffffff', // Set text color to white
+              textShadow: '0 4px 30px rgba(0,0,0,0.5)' // Add shadow for better readability
             }}
           >
             Virtual<br />Model<br />Studio
@@ -62,7 +98,9 @@ export function HeroSection() {
               marginTop: 'var(--space-md)',
               fontSize: '1rem',
               letterSpacing: '0.2em',
-              textTransform: 'uppercase'
+              textTransform: 'uppercase',
+              color: '#ffffff', // Set text color to white
+              textShadow: '0 2px 10px rgba(0,0,0,0.5)'
             }}
           >
             Scroll to Enter
