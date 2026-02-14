@@ -160,8 +160,7 @@ function SectionHeader({ progress }: { progress: MotionValue<number> }) {
                 margin: 0,
                 color: 'var(--color-text-primary)'
             }}>
-                Production<br />
-                <span style={{ fontFamily: 'var(--font-family-serif)', fontStyle: 'italic' }}>Pipeline</span>
+                Production <span style={{ fontFamily: 'var(--font-family-serif)', fontStyle: 'italic' }}>Pipeline</span>
             </h2>
         </motion.div>
     );
@@ -267,7 +266,7 @@ function PipelineCard({ step, index, total, progress, isMobile }: {
 
 
     // X SPREAD (Fan Phase - Desktop Only)
-    const cardWidth = 320;
+    const cardWidth = 260;
     const gap = 20;
     const totalFanWidth = (total * cardWidth) + ((total - 1) * gap);
     const xFanTarget = (index * (cardWidth + gap)) - (totalFanWidth / 2) + (cardWidth / 2);
@@ -285,7 +284,7 @@ function PipelineCard({ step, index, total, progress, isMobile }: {
         <motion.div
             style={{
                 position: 'absolute',
-                top: '28vh',
+                top: '22vh',
                 y: finalY,
                 x,
                 opacity, // Apply Opacity
@@ -301,16 +300,16 @@ function PipelineCard({ step, index, total, progress, isMobile }: {
 function LightCard({ step }: { step: any }) {
     return (
         <div style={{
-            width: '300px',
-            height: '380px', // REDUCED HEIGHT (was 450px)
+            width: '260px',
+            height: '320px', // REDUCED HEIGHT (was 380px)
             background: '#ffffff',
             border: '1px solid rgba(0,0,0,0.05)',
             borderRadius: '24px',
-            padding: '2rem',
+            padding: '1.5rem',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-start', // CHANGED from space-between
-            gap: '1.5rem', // ADDED GAP
+            gap: '1rem', // ADDED GAP
             boxShadow: '0 20px 40px -5px rgba(0, 0, 0, 0.1)',
             color: 'var(--color-text-primary)',
             textAlign: 'left',
@@ -320,8 +319,8 @@ function LightCard({ step }: { step: any }) {
 
             {/* Icon Area */}
             <div style={{
-                width: '60px',
-                height: '60px',
+                width: '50px',
+                height: '50px',
                 flexShrink: 0,
                 borderRadius: '50%',
                 background: 'var(--color-bg-secondary)',
@@ -331,14 +330,14 @@ function LightCard({ step }: { step: any }) {
                 // marginBottom: '1rem', // REMOVED (Handled by gap)
                 border: `1px solid ${step.color}`
             }}>
-                <step.icon size={28} color={step.color} strokeWidth={1.5} />
+                <step.icon size={24} color={step.color} strokeWidth={1.5} />
             </div>
 
             {/* Content */}
             <div style={{ zIndex: 2 }}>
                 <h3 style={{
                     fontFamily: 'var(--font-family-serif)',
-                    fontSize: '1.5rem',
+                    fontSize: '1.3rem',
                     fontWeight: 600,
                     marginBottom: '0.5rem', // REDUCED
                     lineHeight: 1.1,
@@ -349,8 +348,8 @@ function LightCard({ step }: { step: any }) {
 
                 <p style={{
                     fontFamily: 'var(--font-family-sans)',
-                    fontSize: '0.9rem', // SMALLER TEXT
-                    lineHeight: 1.5,
+                    fontSize: '0.85rem', // SMALLER TEXT
+                    lineHeight: 1.4,
                     color: '#6e6e73'
                 }}>
                     {step.text}
@@ -359,7 +358,7 @@ function LightCard({ step }: { step: any }) {
 
             {/* Decorative Number */}
             <div style={{
-                fontSize: '4rem',
+                fontSize: '3rem',
                 fontWeight: 700,
                 color: 'rgba(0,0,0,0.03)',
                 position: 'absolute',

@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
 import { useRef } from 'react';
 
 export function HeroSection() {
@@ -8,10 +8,15 @@ export function HeroSection() {
     offset: ["start start", "end start"]
   });
 
-  // The Kinetic Flythrough
-  const scale = useTransform(scrollYProgress, [0, 0.4, 1], [1, 20, 100]); // Infinite Zoom
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.35], [1, 1, 0]); // Fade fast as we pass through
-  const blur = useTransform(scrollYProgress, [0.3, 0.5], ["0px", "20px"]); // Motion blur effect
+  // The Kinetic Flythrough - Optimized for performance
+  // Reduced max scale from 30x to 12x to prevent GPU texture reflow/clipping issues (fix for flickering/cropping)
+  const scale = useTransform(scrollYProgress, [0, 0.35], [1, 12]);
+  const opacity = useTransform(scrollYProgress, [0, 0.25, 0.35], [1, 1, 0]);
+  const blurValue = useTransform(scrollYProgress, [0.25, 0.35], ["0px", "10px"]);
+  const filter = useMotionTemplate`blur(${blurValue})`;
+  // Use visibility hidden instead of display none to prevent layout thrashing, 
+  // and toggle it safely after opacity triggers.
+  const display = useTransform(scrollYProgress, (pos) => pos >= 0.36 ? "none" : "flex");
 
   return (
     <motion.section
@@ -67,12 +72,13 @@ export function HeroSection() {
           style={{
             scale,
             opacity,
-            filter: `blur(${blur})`, // Dynamic blur
-            display: 'flex',
+            filter,
+            display,
             flexDirection: 'column',
             alignItems: 'center',
             position: 'relative', // Ensure it's on top
-            zIndex: 2
+            zIndex: 2,
+            willChange: 'transform, opacity'
           }}
         >
           <h1
@@ -85,7 +91,6 @@ export function HeroSection() {
               letterSpacing: '-0.05em',
               margin: 0,
               textAlign: 'center',
-              willChange: 'transform',
               color: '#ffffff', // Set text color to white
               textShadow: '0 4px 30px rgba(0,0,0,0.5)' // Add shadow for better readability
             }}
