@@ -18,10 +18,13 @@ export function FinalCTA() {
       <RevealOnScroll>
         <h2
           style={{
-            fontSize: 'var(--font-section-title)',
+            fontSize: 'calc(var(--font-section-title) * 1.5)', // Scaled up significantly
             fontWeight: 'var(--font-weight-light)',
             marginBottom: 'var(--space-lg)',
             letterSpacing: 'var(--letter-spacing-tight)',
+            color: '#ffffff', // Clean white
+            textAlign: 'center',
+            textShadow: '0 4px 20px rgba(0,0,0,0.5)'
           }}
         >
           Let's create something together
@@ -29,14 +32,17 @@ export function FinalCTA() {
       </RevealOnScroll>
       <RevealOnScroll stagger={180}>
         <a
-          href="mailto:hello@virtualmodelstudio.com"
+          href="mailto:virtualmodelstudiobd@gmail.com"
           style={{
+            fontSize: '1.25rem',
             letterSpacing: 'var(--letter-spacing-wide)',
             textDecoration: 'none',
-            color: 'var(--color-text-muted)',
+            color: '#ffffff',
+            opacity: 0.9,
+            transition: 'opacity 0.3s ease'
           }}
         >
-          hello@virtualmodelstudio.com
+          virtualmodelstudiobd@gmail.com
         </a>
       </RevealOnScroll>
     </section>

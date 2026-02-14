@@ -7,6 +7,8 @@ export function Footer() {
         background: 'var(--color-navy-base)',
         color: 'var(--color-silver)',
         padding: 'var(--section-padding-y) var(--side-margin)',
+        position: 'relative', // Ensure stacking context
+        zIndex: 5, // Ensure it covers the fixed hero video
       }}
     >
       <div

@@ -9,7 +9,7 @@ export function MicroStatement() {
     offset: ["start end", "end start"]
   });
 
-  const scale = useTransform(scrollYProgress, [0.2, 0.5, 0.8], [0.8, 1.2, 0.8]);
+  const scale = useTransform(scrollYProgress, [0.2, 0.5, 0.8], [0.9, 1.3, 0.9]); // Increased scale
   const opacity = useTransform(scrollYProgress, [0.2, 0.5, 0.8], [0.5, 1, 0.5]);
 
   return (
@@ -29,16 +29,17 @@ export function MicroStatement() {
     >
       <motion.p
         style={{
-          fontSize: 'var(--font-section-title)', // Larger base font
+          fontSize: 'calc(var(--font-section-title) * 1.2)', // Larger base font
           fontFamily: 'var(--font-family-serif)',
           fontStyle: 'italic',
-          color: 'var(--color-text-primary)',
+          color: '#ffffff', // Clean white for visibility
           textAlign: 'center',
           maxWidth: '20ch',
           margin: 0,
           lineHeight: 'var(--line-height-tight)',
           scale,
-          opacity
+          opacity,
+          textShadow: '0 4px 20px rgba(0,0,0,0.5)' // Added shadow for depth
         }}
       >
         We don't just edit video. We generate reality.

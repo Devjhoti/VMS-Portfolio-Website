@@ -24,18 +24,21 @@ export function HeroSection() {
       style={{
         height: '200vh', // Extended scroll track for timing
         position: 'relative',
-        zIndex: 10,
-        background: '#000' // Dark background fallback
+        zIndex: 0, // Lower z-index to allow next section to cover
+        background: 'transparent'
       }}
     >
       <div style={{
-        position: 'sticky',
+        position: 'fixed', // Changed from sticky to fixed
         top: 0,
+        left: 0,
+        width: '100%',
         height: '100vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        zIndex: -1 // Behind content
       }}>
 
         {/* Background Video */}
