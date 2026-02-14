@@ -50,21 +50,52 @@ export function Navbar() {
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: isMobile
-            ? `var(--space-sm) var(--side-margin)` // 1rem padding on mobile (reduced from 2rem)
+            ? `var(--space-sm) var(--side-margin)`
             : `var(--space-md) var(--side-margin)`,
           maxWidth: 'var(--content-max-width)',
           margin: '0 auto',
-          transition: 'all var(--transition-hover)',
-          background: scrolled || isMenuOpen ? 'rgba(29, 38, 61, 0.95)' : 'transparent',
-          backdropFilter: scrolled || isMenuOpen ? 'blur(12px)' : 'none',
-          WebkitBackdropFilter: scrolled || isMenuOpen ? 'blur(12px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid transparent',
-          boxShadow: scrolled ? '0 4px 30px rgba(0, 0, 0, 0.1)' : 'none',
+          transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)', // Smooth transition
+          background: 'transparent', // Always transparent
+          // Removed blur/border for "Minimalist Shift"
+          mixBlendMode: 'difference', // Key for dynamic readability
+          color: '#ffffff' // Base color for difference mode
         }}
       >
-        <a href="/" style={{ textDecoration: 'none', color: scrolled || isMenuOpen ? 'var(--color-silver)' : '#ffffff', display: 'flex', flexDirection: 'column', lineHeight: 1, position: 'relative', zIndex: 101 }}>
-          <span style={{ fontSize: '1rem', fontWeight: 500, letterSpacing: '-0.02em' }}>Virtual Model</span>
-          <span style={{ fontSize: '1rem', fontFamily: 'var(--font-family-serif)', fontStyle: 'italic', opacity: 0.8 }}>Studio</span>
+        {/* Logo Area */}
+        <a href="/" style={{
+          textDecoration: 'none',
+          color: 'currentColor', // Use inherited color for blend mode
+          display: 'flex',
+          flexDirection: 'column',
+          lineHeight: 1,
+          position: 'relative',
+          zIndex: 101
+        }}>
+          <AnimatePresence mode='wait'>
+            {scrolled ? (
+              <motion.span
+                key="logo-collapsed"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                style={{ fontSize: '1.25rem', fontWeight: 700, letterSpacing: '-0.02em', fontFamily: 'var(--font-family-serif)', fontStyle: 'italic' }}
+              >
+                VMS
+              </motion.span>
+            ) : (
+              <motion.div
+                key="logo-full"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <span style={{ fontSize: '1rem', fontWeight: 500, letterSpacing: '-0.02em', display: 'block' }}>Virtual Model</span>
+                <span style={{ fontSize: '1rem', fontFamily: 'var(--font-family-serif)', fontStyle: 'italic', opacity: 0.8, display: 'block' }}>Studio</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </a>
 
         {/* Desktop Menu */}
@@ -81,11 +112,17 @@ export function Navbar() {
             }}
           >
             {['Work', 'About', 'Contact'].map((item) => (
-              <li key={item}>
+              <li key={item} style={{ position: 'relative' }}>
                 <a
                   href={`#${item.toLowerCase()}`}
-                  className="nav-link"
-                  style={{ color: scrolled ? 'var(--color-silver)' : '#ffffff', textShadow: scrolled ? 'none' : '0 2px 4px rgba(0,0,0,0.3)' }}
+                  className="nav-link-minimal" // Changed class name
+                  style={{
+                    color: 'currentColor',
+                    textDecoration: 'none',
+                    fontWeight: 400,
+                    position: 'relative',
+                    paddingBottom: '4px'
+                  }}
                   onClick={(e) => {
                     if (item === 'Work') {
                       e.preventDefault();
@@ -95,7 +132,21 @@ export function Navbar() {
                   }}
                 >
                   {item}
+                  <span className="link-underline" style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '0%',
+                    height: '1px',
+                    background: 'currentColor',
+                    transition: 'width 0.3s ease'
+                  }} />
                 </a>
+                <style>{`
+                  .nav-link-minimal:hover .link-underline {
+                    width: 100% !important;
+                  }
+                `}</style>
               </li>
             ))}
           </ul>
@@ -112,56 +163,128 @@ export function Navbar() {
               padding: '10px',
               position: 'relative',
               zIndex: 101, // Above overlay
-              color: scrolled || isMenuOpen ? 'var(--color-silver)' : '#ffffff'
+              color: 'currentColor', // Inherit for blend mode
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
             aria-label="Toggle menu"
           >
-            <div style={{ width: '24px', height: '2px', background: 'currentColor', marginBottom: '6px', transition: '0.3s', transform: isMenuOpen ? 'rotate(45deg) translate(5px, 6px)' : 'none' }} />
-            <div style={{ width: '24px', height: '2px', background: 'currentColor', marginBottom: '6px', transition: '0.3s', opacity: isMenuOpen ? 0 : 1 }} />
-            <div style={{ width: '24px', height: '2px', background: 'currentColor', transition: '0.3s', transform: isMenuOpen ? 'rotate(-45deg) translate(5px, -6px)' : 'none' }} />
+            <motion.div
+              animate={isMenuOpen ? "open" : "closed"}
+              style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '24px' }}
+            >
+              <motion.div
+                variants={{
+                  closed: { rotate: 0, y: 0 },
+                  open: { rotate: 45, y: 8 }
+                }}
+                style={{ width: '24px', height: '2px', background: 'currentColor', transformOrigin: 'center' }}
+              />
+              <motion.div
+                variants={{
+                  closed: { opacity: 1 },
+                  open: { opacity: 0 }
+                }}
+                style={{ width: '24px', height: '2px', background: 'currentColor' }}
+              />
+              <motion.div
+                variants={{
+                  closed: { rotate: 0, y: 0 },
+                  open: { rotate: -45, y: -8 }
+                }}
+                style={{ width: '24px', height: '2px', background: 'currentColor', transformOrigin: 'center' }}
+              />
+            </motion.div>
           </button>
         )}
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay - Falling Glass Shard */}
       <AnimatePresence>
         {isMobile && isMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            initial={{ y: '-110%' }}
+            animate={{ y: '0%' }}
+            exit={{ y: '-110%', transition: { duration: 0.4, ease: 'easeInOut' } }}
+            drag="y"
+            dragConstraints={{ bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.05 }}
+            onDragEnd={(_, { offset, velocity }) => {
+              if (offset.y < -100 || velocity.y < -500) {
+                setIsMenuOpen(false);
+              }
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 100,
+              damping: 20,
+              mass: 1.5
+            }}
             style={{
               position: 'fixed',
               inset: 0,
-              background: 'rgba(29, 38, 61, 0.98)',
-              backdropFilter: 'blur(16px)',
+              // The Glass Shard Look - Smoked Glass for Visibility
+              background: 'linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.1) 60%, rgba(10,10,10,0.2) 90%, rgba(10,10,10,0.5) 100%)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
               zIndex: 99,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              paddingTop: '60px'
+              paddingTop: '60px',
+              borderBottom: '1px solid rgba(255,255,255,0.1)',
+              boxShadow: '0 20px 50px rgba(0,0,0,0.3), inset 0 -2px 5px rgba(255,255,255,0.1), inset 0 -10px 40px rgba(0,0,0,0.2)',
+              borderRadius: '0 0 30px 30px',
+              touchAction: 'none' // Important for drag
             }}
           >
-            <ul style={{ listStyle: 'none', padding: 0, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            {/* Gloss Reflection (Top) - Retained for surface shine */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '40%',
+              background: 'linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, transparent 100%)',
+              pointerEvents: 'none'
+            }} />
+
+            <ul style={{
+              listStyle: 'none',
+              padding: 0,
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '2.5rem',
+              position: 'relative',
+              zIndex: 2,
+              width: '100%',
+              // Removed mixBlendMode to ensure consistent white-on-dark contrast
+            }}>
               {['Work', 'About', 'Contact'].map((item) => (
                 <motion.li
                   key={item}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
+                  transition={{ delay: 0.2, duration: 0.4 }}
                   onClick={toggleMenu}
                 >
                   <a
                     href={`#${item.toLowerCase()}`}
                     style={{
-                      fontSize: '2.5rem',
-                      color: 'var(--color-silver)',
+                      fontSize: 'clamp(3rem, 10vw, 4rem)',
+                      color: '#ffffff', // Base for difference mode
                       textDecoration: 'none',
-                      fontWeight: '300',
+                      fontWeight: '200',
+                      letterSpacing: '-0.03em',
                       fontFamily: 'var(--font-family-serif)',
-                      fontStyle: 'italic'
+                      fontStyle: 'italic',
+                      display: 'block',
+                      textShadow: '0 2px 10px rgba(0,0,0,0.5)' // Added shadow for visibility
                     }}
                     onClick={(e) => {
                       if (item === 'Work') {
@@ -176,6 +299,19 @@ export function Navbar() {
                 </motion.li>
               ))}
             </ul>
+
+            {/* Drag Handle Indicator */}
+            <div style={{
+              position: 'absolute',
+              bottom: '20px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '40px',
+              height: '4px',
+              borderRadius: '2px',
+              background: 'rgba(255,255,255,0.3)',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
+            }} />
           </motion.div>
         )}
       </AnimatePresence>
