@@ -9,20 +9,20 @@ export function HeroSection() {
   });
 
   // The Kinetic Flythrough - Optimized for performance
-  // Reduced max scale from 30x to 12x to prevent GPU texture reflow/clipping issues (fix for flickering/cropping)
-  const scale = useTransform(scrollYProgress, [0, 0.35], [1, 12]);
-  const opacity = useTransform(scrollYProgress, [0, 0.25, 0.35], [1, 1, 0]);
-  const blurValue = useTransform(scrollYProgress, [0.25, 0.35], ["0px", "10px"]);
+  // Adjusted for shorter scroll track - completes scale as user scrolls down
+  const scale = useTransform(scrollYProgress, [0, 0.8], [1, 12]);
+  const opacity = useTransform(scrollYProgress, [0, 0.6, 0.8], [1, 1, 0]);
+  const blurValue = useTransform(scrollYProgress, [0.6, 0.8], ["0px", "10px"]);
   const filter = useMotionTemplate`blur(${blurValue})`;
   // Use visibility hidden instead of display none to prevent layout thrashing, 
   // and toggle it safely after opacity triggers.
-  const display = useTransform(scrollYProgress, (pos) => pos >= 0.36 ? "none" : "flex");
+  const display = useTransform(scrollYProgress, (pos) => pos >= 0.85 ? "none" : "flex");
 
   return (
     <motion.section
       ref={ref}
       style={{
-        height: '200vh', // Extended scroll track for timing
+        height: '130vh', // Reduced scroll track for faster transition
         position: 'relative',
         zIndex: 0, // Lower z-index to allow next section to cover
         background: 'transparent'

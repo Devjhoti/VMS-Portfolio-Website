@@ -51,12 +51,17 @@ export function WhatWeDoSection() {
                 e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
             }}
             style={{
+                marginTop: '-10vh', // Pull up to overlap hero slightly
                 position: 'relative',
                 zIndex: 10,
                 backgroundColor: 'rgba(5, 5, 5, 0.65)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
-                padding: '15vh 5vw 10vh', // More top padding, ample bottom padding
+                padding: '20vh 5vw', // Symmetrical top and bottom padding
+                minHeight: '100vh', // Ensure full screen height
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center', // Center content vertically
                 overflow: 'hidden'
             }}
         >
@@ -84,7 +89,13 @@ export function WhatWeDoSection() {
                 pointerEvents: 'none'
             }} />
 
-            <div style={{ position: 'relative', zIndex: 1, maxWidth: '1400px', margin: '0 auto' }}>
+            <div style={{
+                position: 'relative',
+                zIndex: 1,
+                maxWidth: '1400px',
+                margin: '0 auto',
+                width: '100%'
+            }}>
                 <motion.h2
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -95,6 +106,7 @@ export function WhatWeDoSection() {
                         fontWeight: '300',
                         color: '#fff',
                         marginBottom: '4rem',
+                        marginTop: 0,
                         textAlign: 'center',
                         letterSpacing: '-0.02em'
                     }}
