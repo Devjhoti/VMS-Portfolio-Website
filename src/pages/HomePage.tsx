@@ -1,6 +1,7 @@
 import { PageLayout } from '../components/layout/PageLayout';
 import { HeroSection } from '../sections/home/HeroSection';
 import { WhatWeDoSection } from '../sections/home/WhatWeDoSection';
+import { BrandLogosSection } from '../sections/home/BrandLogosSection';
 import { FeaturedWorkSection } from '../sections/home/FeaturedWorkSection';
 import { PhilosophyStrip } from '../sections/home/PhilosophyStrip';
 import { EditorialGrid } from '../sections/home/EditorialGrid';
@@ -17,6 +18,7 @@ export function HomePage() {
     <PageLayout>
       <HeroSection />
       <WhatWeDoSection />
+      <BrandLogosSection />
       <FeaturedWorkSection />
       <ProductionPipeline />
       <PhilosophyStrip />
