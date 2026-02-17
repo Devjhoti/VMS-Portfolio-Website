@@ -1,6 +1,6 @@
 import { PageLayout } from '../components/layout/PageLayout';
 import { HeroSection } from '../sections/home/HeroSection';
-import { SpacerSection } from '../sections/home/SpacerSection';
+import { WhatWeDoSection } from '../sections/home/WhatWeDoSection';
 import { FeaturedWorkSection } from '../sections/home/FeaturedWorkSection';
 import { PhilosophyStrip } from '../sections/home/PhilosophyStrip';
 import { EditorialGrid } from '../sections/home/EditorialGrid';
@@ -16,7 +16,7 @@ export function HomePage() {
   return (
     <PageLayout>
       <HeroSection />
-      <SpacerSection />
+      <WhatWeDoSection />
       <FeaturedWorkSection />
       <ProductionPipeline />
       <PhilosophyStrip />

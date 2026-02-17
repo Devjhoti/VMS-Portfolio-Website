@@ -9,14 +9,15 @@ export function MicroStatement() {
     offset: ["start end", "end start"]
   });
 
-  const scale = useTransform(scrollYProgress, [0.2, 0.5, 0.8], [0.9, 1.3, 0.9]); // Increased scale
-  const opacity = useTransform(scrollYProgress, [0.2, 0.5, 0.8], [0.5, 1, 0.5]);
+  // Scale peaks when element is perfectly centered in viewport (0.5 progress)
+  const scale = useTransform(scrollYProgress, [0.3, 0.5, 0.7], [0.9, 1.4, 0.9]); // Sharper peak at center
+  const opacity = useTransform(scrollYProgress, [0.2, 0.5, 0.8], [0.6, 1, 0.6]);
 
   return (
     <section
       ref={ref}
       style={{
-        minHeight: '60vh',
+        minHeight: '90vh', // Increased height for better centering and focus
         padding: 'var(--section-padding-y) var(--side-margin)',
         maxWidth: 'var(--content-max-width)',
         margin: '0 auto',
