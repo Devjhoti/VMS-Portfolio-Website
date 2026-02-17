@@ -6,7 +6,6 @@ import { FeaturedWorkSection } from '../sections/home/FeaturedWorkSection';
 import { PhilosophyStrip } from '../sections/home/PhilosophyStrip';
 import { EditorialGrid } from '../sections/home/EditorialGrid';
 import { MicroStatement } from '../sections/home/MicroStatement';
-import { FinalCTA } from '../sections/home/FinalCTA';
 import { VisionArchitectureSection } from '../sections/home/VisionArchitectureSection';
 import { ReviewsSection } from '../sections/home/ReviewsSection';
 import { ContactFormSection } from '../sections/home/ContactFormSection';
@@ -24,7 +23,6 @@ export function HomePage() {
       <PhilosophyStrip />
       <EditorialGrid />
       <MicroStatement />
-      <FinalCTA />
       <VisionArchitectureSection />
       <ReviewsSection />
       <ContactFormSection />
