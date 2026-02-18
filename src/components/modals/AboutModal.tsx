@@ -114,6 +114,25 @@ export function AboutModal() {
         }
     }, [isOpen]);
 
+    // Dynamic Title Management
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const prevTitle = document.title;
+
+        if (activeSide === 'vms') {
+            document.title = "VMS | Creative Intelligence";
+        } else if (activeSide === 'pkg') {
+            document.title = "PKG IT | Technical Architecture";
+        } else {
+            document.title = "The Alliance | Vision & Logic";
+        }
+
+        return () => {
+            document.title = prevTitle;
+        };
+    }, [isOpen, activeSide]);
+
 
     const handleSideClick = (side: 'vms' | 'pkg') => {
         setActiveSide(side);
@@ -659,20 +678,20 @@ function ContentLayer({ side, isActive, onBack, accentColor }: any) {
             position: 'relative',
             zIndex: 10,
             width: '100%',
-            maxWidth: '600px',
-            padding: '2rem',
-            paddingTop: isActive ? '6rem' : '2rem', // Add top padding when active to clear sticky/fixed elements if any, or just for spacing
+            // maxWidth: '600px', // Removed to allow full-width click/scroll
+            // padding: '2rem', // Moved to inner
+            // paddingTop: ... 
             display: 'flex',
             flexDirection: 'column',
-            alignItems: isActive ? 'flex-start' : 'center',
-            textAlign: isActive ? 'left' : 'center',
+            alignItems: 'center', // Always center the content column horizontally in the panel
+            // textAlign: ... // Moved to inner
             transition: 'all 0.5s ease',
             height: '100%',
-            justifyContent: isActive ? 'flex-start' : 'center', // Align to top when active so it grows down
-            overflowY: isActive ? 'auto' : 'hidden', // Enable scrolling when active, hide otherwise to prevent glitches
+            justifyContent: isActive ? 'flex-start' : 'center',
+            overflowY: isActive ? 'auto' : 'hidden',
             overflowX: 'hidden',
-            maxHeight: '100vh', // Ensure it doesn't exceed viewport
-            scrollbarWidth: 'none', // Hide scrollbar for cleaner look
+            maxHeight: '100vh',
+            scrollbarWidth: 'none',
         }}>
             <style>{`
                 /* Hide scrollbar for Chrome/Safari/Opera */
@@ -680,238 +699,252 @@ function ContentLayer({ side, isActive, onBack, accentColor }: any) {
                     display: none;
                 }
             `}</style>
-            {/* LOGOS / TYPOGRAPHY */}
-            <motion.div layout style={{ marginBottom: isActive ? '2rem' : '0' }}>
-                {side === 'vms' ? (
-                    // Hero-style Typography for VMS
-                    <div style={{ textAlign: isActive ? 'left' : 'center' }}>
-                        <h2 style={{
-                            fontSize: isActive ? '3rem' : 'clamp(2.5rem, 6vw, 4rem)',
-                            fontWeight: '400',
-                            fontFamily: 'var(--font-family-serif)',
-                            fontStyle: 'italic',
-                            lineHeight: '0.9',
-                            letterSpacing: '-0.05em',
-                            margin: 0,
-                            color: '#ffffff',
-                            textShadow: '0 4px 30px rgba(0,0,0,0.5)',
-                            whiteSpace: 'nowrap'
-                        }}>
-                            Virtual<br />Model<br />Studio
-                        </h2>
-                    </div>
-                ) : (
-                    // PKG Logo / Text
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        background: 'rgba(255,255,255,0.9)', // High opacity white/glass
-                        backdropFilter: 'blur(10px)',
-                        padding: '1.5rem',
-                        borderRadius: '12px',
-                        boxShadow: '0 0 30px rgba(6, 182, 212, 0.3)', // Cyan glow
-                        marginBottom: '1rem'
-                    }}>
-                        <img
-                            src="/assets/PKG_IT-LOGO.png"
-                            alt="PKG IT"
-                            style={{
-                                height: '50px',
-                                objectFit: 'contain',
-                                filter: 'brightness(1.1) contrast(1.1)' // Slight enhancement
-                            }}
-                        />
-                    </div>
-                )}
 
-                {!isActive && (
-                    <p style={{
-                        marginTop: '1rem',
-                        color: accentColor,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.2em',
-                        fontSize: '0.9rem',
-                        fontWeight: 600
-                    }}>
-                        {side === 'vms' ? 'Creative Intelligence' : 'Technical Architecture'}
-                    </p>
-                )}
-            </motion.div>
-
-
-            {/* EXPANDED CONTENT */}
-            <AnimatePresence>
-                {isActive && (
-                    <motion.div
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        style={{
-                            color: 'rgba(255,255,255,0.9)',
-                            alignSelf: 'stretch',
+            {/* Inner Content Wrapper (Constrained Width) */}
+            <div style={{
+                width: '100%',
+                maxWidth: '600px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: isActive ? 'flex-start' : 'center',
+                textAlign: isActive ? 'left' : 'center',
+                padding: '2rem',
+                paddingTop: isActive ? '6rem' : '2rem',
+                transition: 'all 0.5s ease',
+            }}>
+                {/* LOGOS / TYPOGRAPHY */}
+                <motion.div layout style={{ marginBottom: isActive ? '2rem' : '0' }}>
+                    {side === 'vms' ? (
+                        // Hero-style Typography for VMS
+                        <div style={{ textAlign: isActive ? 'left' : 'center' }}>
+                            <h2 style={{
+                                fontSize: isActive ? '3rem' : 'clamp(2.5rem, 6vw, 4rem)',
+                                fontWeight: '400',
+                                fontFamily: 'var(--font-family-serif)',
+                                fontStyle: 'italic',
+                                lineHeight: '0.9',
+                                letterSpacing: '-0.05em',
+                                margin: 0,
+                                color: '#ffffff',
+                                textShadow: '0 4px 30px rgba(0,0,0,0.5)',
+                                whiteSpace: 'nowrap'
+                            }}>
+                                Virtual<br />Model<br />Studio
+                            </h2>
+                        </div>
+                    ) : (
+                        // PKG Logo / Text
+                        <div style={{
                             display: 'flex',
-                            flexDirection: 'column', // Stack content
-                            height: 'auto'
-                        }}
-                    >
-                        {/* CEO Profile - Rounded Image */}
-                        <motion.div
-                            variants={itemVariants}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '1rem',
-                                marginBottom: '2rem',
-                                background: 'rgba(255,255,255,0.05)',
-                                padding: '1rem',
-                                borderRadius: '50px',
-                                border: `1px solid ${accentColor} 40`,
-                                alignSelf: 'flex-start'
-                            }}
-                        >
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            background: 'rgba(255,255,255,0.9)', // High opacity white/glass
+                            backdropFilter: 'blur(10px)',
+                            padding: '1.5rem',
+                            borderRadius: '12px',
+                            boxShadow: '0 0 30px rgba(6, 182, 212, 0.3)', // Cyan glow
+                            marginBottom: '1rem'
+                        }}>
                             <img
-                                src={content.ceoImage}
-                                alt={content.ceoName}
+                                src="/assets/PKG_IT-LOGO.png"
+                                alt="PKG IT"
                                 style={{
-                                    width: '60px',
-                                    height: '60px',
-                                    borderRadius: '50%',
-                                    objectFit: 'cover',
-                                    border: `2px solid ${accentColor} `
+                                    height: '50px',
+                                    objectFit: 'contain',
+                                    filter: 'brightness(1.1) contrast(1.1)' // Slight enhancement
                                 }}
                             />
-                            <div>
-                                <h5 style={{ margin: 0, fontSize: '1.1rem', color: 'white', fontWeight: 600 }}>{content.ceoName}</h5>
-                                <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                    Founder & CEO
-                                </span>
-                            </div>
-                        </motion.div>
+                        </div>
+                    )}
 
-                        {/* Subtitle shown here when active */}
-                        <motion.h4 variants={itemVariants} style={{
+                    {!isActive && (
+                        <p style={{
+                            marginTop: '1rem',
                             color: accentColor,
                             textTransform: 'uppercase',
                             letterSpacing: '0.2em',
-                            fontSize: '1rem',
-                            margin: '0 0 1rem 0',
+                            fontSize: '0.9rem',
                             fontWeight: 600
                         }}>
                             {side === 'vms' ? 'Creative Intelligence' : 'Technical Architecture'}
-                        </motion.h4>
+                        </p>
+                    )}
+                </motion.div>
 
-                        <motion.h4 variants={itemVariants} style={{
-                            fontSize: '2rem',
-                            marginBottom: '1rem',
-                            fontFamily: 'var(--font-family-serif)'
-                        }}>{content.headline}</motion.h4>
 
-                        <motion.p variants={itemVariants} style={{ fontSize: '1.2rem', lineHeight: 1.6, marginBottom: '2rem' }}>
-                            {content.text}
-                        </motion.p>
-
-                        <motion.div variants={itemVariants} style={{ display: 'grid', gap: '1rem' }}>
-                            {content.services.map((service, i) => (
-                                <div key={i}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setActiveAccordion(activeAccordion === i ? null : i);
-                                    }}
-                                    style={{
-                                        cursor: 'pointer',
-                                        border: '1px solid rgba(255,255,255,0.1)',
-                                        background: 'rgba(255,255,255,0.05)',
-                                        borderRadius: '8px',
-                                        overflow: 'hidden',
-                                        transition: 'all 0.3s ease'
-                                    }}
-                                >
-                                    {/* Accordion Header */}
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        padding: '1rem',
-                                    }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                            <div style={{ width: '6px', height: '6px', background: accentColor, borderRadius: '50%' }} />
-                                            <span style={{ fontSize: '1rem', fontWeight: 500, color: 'white' }}>{service.title}</span>
-                                        </div>
-                                        <span style={{
-                                            transform: activeAccordion === i ? 'rotate(180deg)' : 'rotate(0deg)',
-                                            transition: 'transform 0.3s ease',
-                                            color: 'rgba(255,255,255,0.5)'
-                                        }}>▼</span>
-                                    </div>
-
-                                    {/* Accordion Body */}
-                                    <AnimatePresence>
-                                        {activeAccordion === i && (
-                                            <motion.div
-                                                initial={{ height: 0, opacity: 0 }}
-                                                animate={{ height: 'auto', opacity: 1 }}
-                                                exit={{ height: 0, opacity: 0 }}
-                                                style={{ overflow: 'hidden' }}
-                                            >
-                                                <div style={{
-                                                    padding: '0 1rem 1rem 1rem',
-                                                    paddingLeft: '2.5rem',
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    gap: '0.5rem'
-                                                }}>
-                                                    {service.details.map((detail, idx) => (
-                                                        <motion.div
-                                                            key={idx}
-                                                            initial={{ x: -10, opacity: 0 }}
-                                                            animate={{ x: 0, opacity: 1 }}
-                                                            transition={{ delay: idx * 0.05 }}
-                                                            style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)' }}
-                                                        >
-                                                            • {detail}
-                                                        </motion.div>
-                                                    ))}
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-                            ))}
-                        </motion.div>
-
-                        <motion.button
-                            variants={itemVariants}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onBack();
-                            }}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                {/* EXPANDED CONTENT */}
+                <AnimatePresence>
+                    {isActive && (
+                        <motion.div
+                            variants={containerVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
                             style={{
-                                marginTop: '3rem',
-                                background: 'transparent',
-                                border: `1px solid ${accentColor} `,
-                                color: accentColor,
-                                padding: '1rem 2rem',
-                                borderRadius: '50px',
-                                cursor: 'pointer',
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.1em',
-                                fontSize: '0.8rem',
+                                color: 'rgba(255,255,255,0.9)',
+                                alignSelf: 'stretch',
                                 display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                alignSelf: 'flex-start'
+                                flexDirection: 'column', // Stack content
+                                height: 'auto'
                             }}
                         >
-                            <ArrowLeft size={16} /> Back to Alliance
-                        </motion.button>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                            {/* CEO Profile - Rounded Image */}
+                            <motion.div
+                                variants={itemVariants}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '1rem',
+                                    marginBottom: '2rem',
+                                    background: 'rgba(255,255,255,0.05)',
+                                    padding: '1rem',
+                                    borderRadius: '50px',
+                                    border: `1px solid ${accentColor} 40`,
+                                    alignSelf: 'flex-start'
+                                }}
+                            >
+                                <img
+                                    src={content.ceoImage}
+                                    alt={content.ceoName}
+                                    style={{
+                                        width: '60px',
+                                        height: '60px',
+                                        borderRadius: '50%',
+                                        objectFit: 'cover',
+                                        border: `2px solid ${accentColor} `
+                                    }}
+                                />
+                                <div>
+                                    <h5 style={{ margin: 0, fontSize: '1.1rem', color: 'white', fontWeight: 600 }}>{content.ceoName}</h5>
+                                    <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                        Founder & CEO
+                                    </span>
+                                </div>
+                            </motion.div>
+
+                            {/* Subtitle shown here when active */}
+                            <motion.h4 variants={itemVariants} style={{
+                                color: accentColor,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.2em',
+                                fontSize: '1rem',
+                                margin: '0 0 1rem 0',
+                                fontWeight: 600
+                            }}>
+                                {side === 'vms' ? 'Creative Intelligence' : 'Technical Architecture'}
+                            </motion.h4>
+
+                            <motion.h4 variants={itemVariants} style={{
+                                fontSize: '2rem',
+                                marginBottom: '1rem',
+                                fontFamily: 'var(--font-family-serif)'
+                            }}>{content.headline}</motion.h4>
+
+                            <motion.p variants={itemVariants} style={{ fontSize: '1.2rem', lineHeight: 1.6, marginBottom: '2rem' }}>
+                                {content.text}
+                            </motion.p>
+
+                            <motion.div variants={itemVariants} style={{ display: 'grid', gap: '1rem' }}>
+                                {content.services.map((service, i) => (
+                                    <div key={i}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setActiveAccordion(activeAccordion === i ? null : i);
+                                        }}
+                                        style={{
+                                            cursor: 'pointer',
+                                            border: '1px solid rgba(255,255,255,0.1)',
+                                            background: 'rgba(255,255,255,0.05)',
+                                            borderRadius: '8px',
+                                            overflow: 'hidden',
+                                            transition: 'all 0.3s ease'
+                                        }}
+                                    >
+                                        {/* Accordion Header */}
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            padding: '1rem',
+                                        }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                                <div style={{ width: '6px', height: '6px', background: accentColor, borderRadius: '50%' }} />
+                                                <span style={{ fontSize: '1rem', fontWeight: 500, color: 'white' }}>{service.title}</span>
+                                            </div>
+                                            <span style={{
+                                                transform: activeAccordion === i ? 'rotate(180deg)' : 'rotate(0deg)',
+                                                transition: 'transform 0.3s ease',
+                                                color: 'rgba(255,255,255,0.5)'
+                                            }}>▼</span>
+                                        </div>
+
+                                        {/* Accordion Body */}
+                                        <AnimatePresence>
+                                            {activeAccordion === i && (
+                                                <motion.div
+                                                    initial={{ height: 0, opacity: 0 }}
+                                                    animate={{ height: 'auto', opacity: 1 }}
+                                                    exit={{ height: 0, opacity: 0 }}
+                                                    style={{ overflow: 'hidden' }}
+                                                >
+                                                    <div style={{
+                                                        padding: '0 1rem 1rem 1rem',
+                                                        paddingLeft: '2.5rem',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        gap: '0.5rem'
+                                                    }}>
+                                                        {service.details.map((detail, idx) => (
+                                                            <motion.div
+                                                                key={idx}
+                                                                initial={{ x: -10, opacity: 0 }}
+                                                                animate={{ x: 0, opacity: 1 }}
+                                                                transition={{ delay: idx * 0.05 }}
+                                                                style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)' }}
+                                                            >
+                                                                • {detail}
+                                                            </motion.div>
+                                                        ))}
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                ))}
+                            </motion.div>
+
+                            <motion.button
+                                variants={itemVariants}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onBack();
+                                }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                style={{
+                                    marginTop: '3rem',
+                                    background: 'transparent',
+                                    border: `1px solid ${accentColor} `,
+                                    color: accentColor,
+                                    padding: '1rem 2rem',
+                                    borderRadius: '50px',
+                                    cursor: 'pointer',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.1em',
+                                    fontSize: '0.8rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    alignSelf: 'flex-start'
+                                }}
+                            >
+                                <ArrowLeft size={16} /> Back to Alliance
+                            </motion.button>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
         </div>
     );
 }
