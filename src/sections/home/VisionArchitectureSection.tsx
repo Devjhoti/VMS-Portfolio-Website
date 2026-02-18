@@ -261,7 +261,7 @@ export function VisionArchitectureSection() {
                                 color: 'inherit',
                                 textDecoration: 'none'
                             }}>
-                                Pranabprg@gmail.com
+                                pranabprg@gmail.com
                             </a>
 
                             <p style={{

@@ -129,6 +129,10 @@ export function Navbar() {
                       window.dispatchEvent(new Event('open-work-grid'));
                       document.getElementById('editorial')?.scrollIntoView({ behavior: 'smooth' });
                     }
+                    if (item === 'About') {
+                      e.preventDefault();
+                      window.dispatchEvent(new Event('open-about-modal'));
+                    }
                   }}
                 >
                   {item}
@@ -291,6 +295,10 @@ export function Navbar() {
                         e.preventDefault();
                         window.dispatchEvent(new Event('open-work-grid'));
                         document.getElementById('editorial')?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                      if (item === 'About') {
+                        e.preventDefault();
+                        window.dispatchEvent(new Event('open-about-modal'));
                       }
                     }}
                   >

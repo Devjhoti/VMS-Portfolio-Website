@@ -1,16 +1,22 @@
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export function ScrollToTopButton() {
     const { scrollY } = useScroll();
     const [isVisible, setIsVisible] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Listen for modal state
+    useEffect(() => {
+        const handleModalChange = (e: CustomEvent) => {
+            setIsModalOpen(e.detail.isOpen);
+        };
+        window.addEventListener('about-modal-change', handleModalChange as EventListener);
+        return () => window.removeEventListener('about-modal-change', handleModalChange as EventListener);
+    }, []);
 
     useMotionValueEvent(scrollY, "change", (latest) => {
-        if (latest > 500) {
-            setIsVisible(true);
-        } else {
-            setIsVisible(false);
-        }
+        setIsVisible(latest > 500);
     });
 
     const scrollToTop = () => {
@@ -22,7 +28,7 @@ export function ScrollToTopButton() {
 
     return (
         <AnimatePresence>
-            {isVisible && (
+            {isVisible && !isModalOpen && (
                 <motion.button
                     onClick={scrollToTop}
                     initial={{ opacity: 0, scale: 0.5, y: 20 }}
