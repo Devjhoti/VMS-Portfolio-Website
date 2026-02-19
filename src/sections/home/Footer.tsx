@@ -8,28 +8,15 @@ export function Footer() {
   return (
     <footer
       style={{
-        background: '#050505',
+        backgroundColor: 'rgba(5, 5, 5, 0.65)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
         position: 'relative',
         zIndex: 5,
         borderTop: '1px solid rgba(255, 255, 255, 0.05)',
         overflow: 'hidden',
       }}
     >
-      {/* Cinematic Background Glow */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '-50%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '100%',
-          maxWidth: '1200px',
-          height: '1000px',
-          background: 'radial-gradient(ellipse at center, rgba(29, 38, 61, 0.4) 0%, rgba(5, 5, 5, 0) 70%)',
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}
-      />
 
       <div
         style={{
@@ -209,7 +196,16 @@ export function Footer() {
                     fontSize: '0.85rem'
                   }}
                 >
-                  <span style={{ fontWeight: 600, letterSpacing: '0.05em' }}>PKG IT</span>
+                  <img
+                    src="/assets/PKG_IT-LOGO.png"
+                    alt="PKG IT"
+                    style={{
+                      height: '24px',
+                      width: 'auto',
+                      objectFit: 'contain',
+                      filter: 'brightness(0) invert(1) opacity(0.8)'
+                    }}
+                  />
                 </a>
               </div>
 
