@@ -5,6 +5,9 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isEditorialGlass, setIsEditorialGlass] = useState(false);
+
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
   useEffect(() => {
     let ticking = false;
@@ -23,8 +26,17 @@ export function Navbar() {
       if (window.innerWidth >= 768) setIsMenuOpen(false);
     };
 
+    const onEnterGlass = () => setIsEditorialGlass(true);
+    const onLeaveGlass = () => setIsEditorialGlass(false);
+    const onOverlayOpen = () => setIsOverlayOpen(true);
+    const onOverlayClose = () => setIsOverlayOpen(false);
+
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', checkMobile);
+    window.addEventListener('enter-editorial-glass', onEnterGlass);
+    window.addEventListener('leave-editorial-glass', onLeaveGlass);
+    window.addEventListener('overlay-opened', onOverlayOpen);
+    window.addEventListener('overlay-closed', onOverlayClose);
 
     // Initial check
     checkMobile();
@@ -32,10 +44,45 @@ export function Navbar() {
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('enter-editorial-glass', onEnterGlass);
+      window.removeEventListener('leave-editorial-glass', onLeaveGlass);
+      window.removeEventListener('overlay-opened', onOverlayOpen);
+      window.removeEventListener('overlay-closed', onOverlayClose);
     };
   }, []);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  const handleNavClick = (e: React.MouseEvent, item: string) => {
+    if (isOverlayOpen) {
+      e.preventDefault();
+      // Immediately reset navbar state to prevent ghosting
+      setIsEditorialGlass(false);
+      setIsOverlayOpen(false);
+      window.dispatchEvent(new Event('trigger-overlay-close'));
+
+      setTimeout(() => {
+        if (item === 'Contact') {
+          document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+        } else if (item === 'About') {
+          window.dispatchEvent(new Event('open-about-modal'));
+        } else if (item === 'Home') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 300);
+      return;
+    }
+
+    if (item === 'Work') {
+      e.preventDefault();
+      // Only scroll, do not open overlay
+      document.getElementById('editorial')?.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (item === 'About') {
+      e.preventDefault();
+      window.dispatchEvent(new Event('open-about-modal'));
+    }
+  };
 
   return (
     <>
@@ -45,7 +92,7 @@ export function Navbar() {
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 100,
+          zIndex: 200, // Higher than modal overlay (100)
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -54,23 +101,101 @@ export function Navbar() {
             : `var(--space-md) var(--side-margin)`,
           maxWidth: 'var(--content-max-width)',
           margin: '0 auto',
-          transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)', // Smooth transition
-          background: 'transparent', // Always transparent
-          // Removed blur/border for "Minimalist Shift"
-          mixBlendMode: 'difference', // Key for dynamic readability
-          color: '#ffffff' // Base color for difference mode
+          transition: 'padding 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+          // No background on the nav itself, strictly handled by layers
+          mixBlendMode: isEditorialGlass ? 'normal' : 'difference',
+          color: isEditorialGlass ? 'var(--color-text-primary)' : '#ffffff'
         }}
       >
-        {/* Logo Area */}
-        <a href="/" style={{
-          textDecoration: 'none',
-          color: 'currentColor', // Use inherited color for blend mode
+        {/* Rectangular Convex Lens Background */}
+        <motion.div
+          initial={{ scaleY: 0, opacity: 0 }}
+          animate={{
+            scaleY: isEditorialGlass ? 1 : 0,
+            opacity: isEditorialGlass ? 1 : 0
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 120,
+            damping: 14,
+            mass: 1
+          }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: -1,
+            transformOrigin: 'top',
+            // The "Convex Lens" Look
+            backdropFilter: 'blur(16px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+            background: 'rgba(255, 255, 255, 0.6)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.4)',
+            boxShadow: `
+               0 10px 30px rgba(0, 0, 0, 0.1), 
+               inset 0 0 20px rgba(255, 255, 255, 0.5), 
+               inset 0 -10px 20px rgba(255, 255, 255, 0.3)
+             `
+          }}
+        />
+
+        {/* Go Back Button Container (Centered) */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
           display: 'flex',
-          flexDirection: 'column',
-          lineHeight: 1,
-          position: 'relative',
-          zIndex: 101
+          alignItems: 'center',
+          justifyContent: 'center',
+          pointerEvents: 'none', // Allow clicks pass through to nav items if needed
+          zIndex: 10
         }}>
+          <AnimatePresence>
+            {isOverlayOpen && isEditorialGlass && (
+              <motion.button
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                onClick={() => {
+                  setIsEditorialGlass(false);
+                  setIsOverlayOpen(false);
+                  window.dispatchEvent(new Event('trigger-overlay-close'));
+                }}
+                style={{
+                  pointerEvents: 'auto', // Re-enable clicks
+                  background: 'rgba(0,0,0,0.8)',
+                  color: '#fff',
+                  border: 'none',
+                  padding: '0.6rem 1.4rem',
+                  borderRadius: '50px',
+                  fontSize: '0.9rem',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                <span style={{ fontSize: '1.2em', lineHeight: 1, display: 'block', marginBottom: '1px' }}>&larr;</span> Go Back
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Logo Area */}
+        <a
+          href="/"
+          onClick={(e) => handleNavClick(e, 'Home')}
+          style={{
+            textDecoration: 'none',
+            color: 'currentColor', // Use inherited color for blend mode
+            display: 'flex',
+            flexDirection: 'column',
+            lineHeight: 1,
+            position: 'relative',
+            zIndex: 101,
+            cursor: 'pointer'
+          }}
+        >
           <AnimatePresence mode='wait'>
             {scrolled ? (
               <motion.span
@@ -111,48 +236,40 @@ export function Navbar() {
               fontWeight: 'var(--font-weight-light)',
             }}
           >
-            {['Work', 'About', 'Contact'].map((item) => (
-              <li key={item} style={{ position: 'relative' }}>
-                <a
-                  href={`#${item.toLowerCase()}`}
-                  className="nav-link-minimal" // Changed class name
-                  style={{
-                    color: 'currentColor',
-                    textDecoration: 'none',
-                    fontWeight: 400,
-                    position: 'relative',
-                    paddingBottom: '4px'
-                  }}
-                  onClick={(e) => {
-                    if (item === 'Work') {
-                      e.preventDefault();
-                      window.dispatchEvent(new Event('open-work-grid'));
-                      document.getElementById('editorial')?.scrollIntoView({ behavior: 'smooth' });
-                    }
-                    if (item === 'About') {
-                      e.preventDefault();
-                      window.dispatchEvent(new Event('open-about-modal'));
-                    }
-                  }}
-                >
-                  {item}
-                  <span className="link-underline" style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    width: '0%',
-                    height: '1px',
-                    background: 'currentColor',
-                    transition: 'width 0.3s ease'
-                  }} />
-                </a>
-                <style>{`
+            {['Work', 'About', 'Contact']
+              .filter(item => isOverlayOpen ? item !== 'Work' : true) // Hide Work in Overlay
+              .map((item) => (
+                <li key={item} style={{ position: 'relative' }}>
+                  <a
+                    href={`#${item.toLowerCase()}`}
+                    className="nav-link-minimal" // Changed class name
+                    style={{
+                      color: 'currentColor',
+                      textDecoration: 'none',
+                      fontWeight: 400,
+                      position: 'relative',
+                      paddingBottom: '4px'
+                    }}
+                    onClick={(e) => handleNavClick(e, item)}
+                  >
+                    {item}
+                    <span className="link-underline" style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      width: '0%',
+                      height: '1px',
+                      background: 'currentColor',
+                      transition: 'width 0.3s ease'
+                    }} />
+                  </a>
+                  <style>{`
                   .nav-link-minimal:hover .link-underline {
                     width: 100% !important;
                   }
                 `}</style>
-              </li>
-            ))}
+                </li>
+              ))}
           </ul>
         )}
 
@@ -234,7 +351,7 @@ export function Navbar() {
               background: 'linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.1) 60%, rgba(10,10,10,0.2) 90%, rgba(10,10,10,0.5) 100%)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
-              zIndex: 99,
+              zIndex: 110, // Must be higher than Video Grid Overlay (100)
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -290,17 +407,7 @@ export function Navbar() {
                       display: 'block',
                       textShadow: '0 2px 10px rgba(0,0,0,0.5)' // Added shadow for visibility
                     }}
-                    onClick={(e) => {
-                      if (item === 'Work') {
-                        e.preventDefault();
-                        window.dispatchEvent(new Event('open-work-grid'));
-                        document.getElementById('editorial')?.scrollIntoView({ behavior: 'smooth' });
-                      }
-                      if (item === 'About') {
-                        e.preventDefault();
-                        window.dispatchEvent(new Event('open-about-modal'));
-                      }
-                    }}
+                    onClick={(e) => handleNavClick(e, item)}
                   >
                     {item}
                   </a>

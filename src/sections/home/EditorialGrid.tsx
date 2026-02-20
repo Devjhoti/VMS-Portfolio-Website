@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { VideoPlayer } from '../../components/VideoPlayer';
 import { editorialVideos, featuredWorkVideos } from '../../data/videos';
 
@@ -46,10 +46,25 @@ export function EditorialGrid() {
 
   const visibleVideos = useMemo(() => editorialVideos.slice(0, visibleCount), [visibleCount]);
 
-  /* 
-   * Removed useScroll/scrollYProgress as they were used for the previous 
-   * scroll-linked zigzag animation which has been replaced by masonry.
-   */
+  // Navbar Interaction Logic
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+  useEffect(() => {
+    // Monitor scroll to trigger navbar glass effect
+    const unsubscribe = scrollYProgress.on("change", (latest) => {
+      // If we are INSIDE the grid (0 to 1), trigger glass
+      // If we are OUTSIDE ( < 0 or > 1), remove glass
+      if (latest > 0 && latest < 1) {
+        window.dispatchEvent(new Event('enter-editorial-glass'));
+      } else {
+        window.dispatchEvent(new Event('leave-editorial-glass'));
+      }
+    });
+    return () => unsubscribe();
+  }, [scrollYProgress]);
 
   return (
     <>
@@ -107,6 +122,8 @@ export function EditorialGrid() {
 }
 
 function MasonryGrid({ videos, columns }: { videos: any[], columns: number }) {
+  const isMobile = columns === 1;
+
   // Smart Masonry Layout: distribute to shortest column to minimize whitespace
   const gridColumns = useMemo(() => {
     if (columns === 1) return [videos]; // Mobile: just one column
@@ -159,6 +176,7 @@ function MasonryGrid({ videos, columns }: { videos: any[], columns: number }) {
               video={video}
               index={index}
               colIndex={colIndex}
+              isMobile={isMobile}
             />
           ))}
         </div>
@@ -167,19 +185,22 @@ function MasonryGrid({ videos, columns }: { videos: any[], columns: number }) {
   );
 }
 
-function GridCard({ video, index, colIndex }: { video: any, index: number, colIndex?: number }) {
+function GridCard({ video, index, colIndex, isMobile }: { video: any, index: number, colIndex?: number, isMobile?: boolean }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 200, scale: 0.85 }} // Start lower and smaller for more drama
+      initial={{ opacity: 0, y: 100, scale: 0.9 }} // Reduced distance for faster feel
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "0px 0px -100px 0px" }} // Trigger earlier/smoother
+      viewport={{ once: true, margin: "0px 0px -100px 0px" }}
       transition={{
         type: "spring",
-        stiffness: 60,  // Softer spring
-        damping: 12,    // More bounce/bubble
+        stiffness: isMobile ? 120 : 80,  // Stiffer/Faster on mobile
+        damping: isMobile ? 20 : 15,     // Less bounce on mobile for speed
         mass: 1,
-        // Stagger delay based on column index to create a "race" feel
-        delay: index * 0.1 + (colIndex ? colIndex * 0.05 : 0)
+        // Prevent infinite delay accumulation. Reset delay every 4 items.
+        // On mobile, just a tiny stagger or none, since scroll does the job.
+        delay: isMobile
+          ? 0.05
+          : (index % 4) * 0.1 + (colIndex ? colIndex * 0.05 : 0)
       }}
       whileHover={{
         y: -10,
@@ -273,7 +294,41 @@ function SeeMoreButton({ onClick }: { onClick: () => void }) {
 
 
 function VideoGridOverlay({ videos, onClose }: { videos: any[], onClose: () => void }) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [columns, setColumns] = useState(3);
+  const { scrollY } = useScroll({ container: containerRef });
+
+  useEffect(() => {
+    // Notify Navbar that we are in Overlay Mode
+    window.dispatchEvent(new Event('overlay-opened'));
+
+    // Scroll Lock
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = 'hidden';
+
+    // Monitor overlay scroll for navbar glass effect
+    const unsubscribe = scrollY.on("change", (latest) => {
+      // If we scroll down a bit in the overlay, trigger glass
+      if (latest > 50) {
+        window.dispatchEvent(new Event('enter-editorial-glass'));
+      } else {
+        window.dispatchEvent(new Event('leave-editorial-glass'));
+      }
+    });
+
+    // Listen for Close Trigger from Navbar
+    const handleCloseTrigger = () => onClose();
+    window.addEventListener('trigger-overlay-close', handleCloseTrigger);
+
+    // Reset when overlay closes
+    return () => {
+      window.dispatchEvent(new Event('overlay-closed'));
+      document.body.style.overflow = originalStyle;
+      unsubscribe();
+      window.dispatchEvent(new Event('leave-editorial-glass'));
+      window.removeEventListener('trigger-overlay-close', handleCloseTrigger);
+    };
+  }, [scrollY, onClose]);
 
   useEffect(() => {
     const checkColumns = () => {
@@ -288,6 +343,7 @@ function VideoGridOverlay({ videos, onClose }: { videos: any[], onClose: () => v
 
   return (
     <motion.div
+      ref={containerRef}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -299,38 +355,10 @@ function VideoGridOverlay({ videos, onClose }: { videos: any[], onClose: () => v
         background: 'rgba(255,255,255,0.98)',
         overflowY: 'auto',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        paddingTop: 'var(--space-xl)' // Space for navbar
       }}
     >
-      {/* Close Button Header */}
-      <div style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 10,
-        padding: '2rem var(--side-margin)',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        background: 'linear-gradient(to bottom, rgba(255,255,255,1) 80%, rgba(255,255,255,0))'
-      }}>
-        <button
-          onClick={onClose}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            fontSize: '3rem',
-            lineHeight: 1,
-            cursor: 'pointer',
-            color: 'var(--color-text-primary)',
-            opacity: 0.5,
-            transition: 'opacity 0.2s'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-          onMouseLeave={(e) => e.currentTarget.style.opacity = '0.5'}
-        >
-          &times;
-        </button>
-      </div>
-
       <div style={{
         padding: '0 var(--side-margin) 10vh',
         maxWidth: '1600px',
