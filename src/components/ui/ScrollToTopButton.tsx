@@ -4,15 +4,27 @@ import { useState, useEffect } from 'react';
 export function ScrollToTopButton() {
     const { scrollY } = useScroll();
     const [isVisible, setIsVisible] = useState(false);
+    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Listen for modal state
+    // Listen for modal and overlay state
     useEffect(() => {
         const handleModalChange = (e: CustomEvent) => {
             setIsModalOpen(e.detail.isOpen);
         };
+
+        const handleOverlayOpen = () => setIsOverlayOpen(true);
+        const handleOverlayClose = () => setIsOverlayOpen(false);
+
         window.addEventListener('about-modal-change', handleModalChange as EventListener);
-        return () => window.removeEventListener('about-modal-change', handleModalChange as EventListener);
+        window.addEventListener('overlay-opened', handleOverlayOpen);
+        window.addEventListener('overlay-closed', handleOverlayClose);
+
+        return () => {
+            window.removeEventListener('about-modal-change', handleModalChange as EventListener);
+            window.removeEventListener('overlay-opened', handleOverlayOpen);
+            window.removeEventListener('overlay-closed', handleOverlayClose);
+        };
     }, []);
 
     useMotionValueEvent(scrollY, "change", (latest) => {
@@ -28,7 +40,7 @@ export function ScrollToTopButton() {
 
     return (
         <AnimatePresence>
-            {isVisible && !isModalOpen && (
+            {isVisible && !isModalOpen && !isOverlayOpen && (
                 <motion.button
                     onClick={scrollToTop}
                     initial={{ opacity: 0, scale: 0.5, y: 20 }}

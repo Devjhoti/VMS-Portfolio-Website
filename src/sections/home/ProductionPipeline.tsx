@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence, MotionValue, type Variants } from 'framer-motion';
 import { Compass, Sparkles, Film, Globe } from 'lucide-react';
 
 const steps = [
@@ -13,14 +13,14 @@ const steps = [
     {
         id: 2,
         title: "Generative Synthesis",
-        text: "Leveraging custom-trained AI models (Midjourney/Runway) to generate high-fidelity base assets, reducing production time by 60%.",
+        text: "Leveraging custom-trained AI models to generate high-fidelity base assets, reducing production time by 60%.",
         icon: Sparkles,
         color: "#5D8AA8"
     },
     {
         id: 3,
         title: "Motion & Physics",
-        text: "Injecting soul into static generations. We apply 3D camera movements, particle physics, and cinematic color grading in After Effects.",
+        text: "Injecting soul into static generations. We apply 3D camera movements, particle physics, and cinematic color grading.",
         icon: Film,
         color: "#9F2B68"
     },
@@ -35,28 +35,53 @@ const steps = [
 
 export function ProductionPipeline() {
     const containerRef = useRef<HTMLElement>(null);
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
+    const [activeCardIndex, setActiveCardIndex] = useState(-1);
+    const [viewState, setViewState] = useState<'intro' | 'flow' | 'fan-out'>('intro');
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start start", "end end"]
     });
 
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768; // Simple check for mobile
+
+    // Detect state changes tied to scroll milestones
+    useMotionValueEvent(scrollYProgress, "change", (latest) => {
+        // --- PHASE 1: INTRO (0 - 0.15) ---
+        if (latest < 0.15) {
+            setViewState('intro');
+            setActiveCardIndex(-1);
+        }
+        // --- PHASE 2: FLOW (0.15 - 0.85) ---
+        else if (latest >= 0.15 && latest < 0.85) {
+            setViewState('flow');
+            // Milestones for triggering card entry
+            // 4 Cards spread over 0.70 range -> approx 0.175 per card window
+            // Card 1 triggers at 0.15
+            // Card 2 triggers at 0.325
+            // Card 3 triggers at 0.50
+            // Card 4 triggers at 0.675
+
+            if (latest >= 0.15 && latest < 0.325) setActiveCardIndex(0);
+            else if (latest >= 0.325 && latest < 0.50) setActiveCardIndex(1);
+            else if (latest >= 0.50 && latest < 0.675) setActiveCardIndex(2);
+            else if (latest >= 0.675) setActiveCardIndex(3);
+        }
+        // --- PHASE 3: FAN OUT (0.85 - 1.0) ---
+        else {
+            setViewState('fan-out');
+            setActiveCardIndex(4); // All active effectively
+        }
+    });
+
     return (
         <section
             ref={containerRef}
             style={{
-                height: '400vh',
-                position: 'relative',
-                background: 'var(--color-bg-primary)',
-                color: 'var(--color-text-primary)'
+                height: '600vh',
+                background: '#0a0a0a',
+                color: '#fff',
+                position: 'relative'
             }}
         >
             <div style={{
@@ -64,312 +89,343 @@ export function ProductionPipeline() {
                 top: 0,
                 height: '100vh',
                 overflow: 'hidden',
+                perspective: viewState === 'fan-out' ? 'none' : '1200px',
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
-                perspective: '1000px'
+                justifyContent: 'center'
             }}>
-
-                {/* Background Elements */}
+                {/* Background Atmosphere */}
                 <div style={{
                     position: 'absolute',
                     inset: 0,
-                    background: 'radial-gradient(circle at 50% 50%, #ffffff 0%, #f0f0f0 100%)',
-                    zIndex: 0,
-                    opacity: 0.5
+                    background: 'radial-gradient(circle at 50% 30%, rgba(20,20,30,1) 0%, #000 70%)',
+                    zIndex: 0
                 }} />
 
-                {/* Section Header */}
-                <SectionHeader progress={scrollYProgress} />
-
-                {/* Creative Horizontal Progress Bar */}
+                {/* Grid Floor */}
                 <div style={{
                     position: 'absolute',
-                    bottom: 'calc(10vh - 50px)',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '200px',
-                    height: '2px',
-                    background: 'rgba(0,0,0,0.1)',
-                    overflow: 'hidden',
-                    borderRadius: '2px',
-                    zIndex: 20
-                }}>
-                    <motion.div style={{
-                        width: '100%',
-                        height: '100%',
-                        background: 'var(--color-copper)',
-                        scaleX: scrollYProgress,
-                        transformOrigin: 'left'
-                    }} />
-                </div>
+                    bottom: '-20%',
+                    left: '-50%',
+                    width: '200%',
+                    height: '100%',
+                    background: `
+                        linear-gradient(transparent 0%, rgba(50,50,80,0.1) 100%),
+                        repeating-linear-gradient(90deg, transparent 0, transparent 49px, rgba(255,255,255,0.03) 50px),
+                        repeating-linear-gradient(0deg, transparent 0, transparent 49px, rgba(255,255,255,0.03) 50px)
+                    `,
+                    transform: 'rotateX(60deg)',
+                    transformOrigin: '50% 100%',
+                    pointerEvents: 'none',
+                    zIndex: 0
+                }} />
 
+                {/* Persistent Headline */}
+                <motion.div
+                    initial={{ opacity: 0, y: -50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    style={{
+                        position: 'absolute',
+                        top: '10%',
+                        zIndex: 20,
+                        textAlign: 'center',
+                        textShadow: '0 0 30px rgba(0,0,0,0.8)'
+                    }}
+                >
+                    <h2 style={{
+                        fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                        fontWeight: 200,
+                        letterSpacing: '-0.02em',
+                        margin: 0
+                    }}>
+                        Production <span style={{ fontFamily: 'var(--font-family-serif)', fontStyle: 'italic', fontWeight: 400 }}>Pipeline</span>
+                    </h2>
+                </motion.div>
 
                 {/* Cards Container */}
                 <div style={{
                     position: 'relative',
                     width: '100%',
-                    maxWidth: '1400px',
-                    height: '60vh',
+                    height: '100%',
                     display: 'flex',
-                    justifyContent: 'center',
                     alignItems: 'center',
+                    justifyContent: 'center',
+                    transformStyle: 'preserve-3d',
                     zIndex: 10
                 }}>
-                    {steps.map((step, index) => (
-                        <PipelineCard
-                            key={step.id}
-                            step={step}
-                            index={index}
-                            total={steps.length}
-                            progress={scrollYProgress}
-                            isMobile={isMobile}
-                        />
-                    ))}
+                    {steps.map((step, index) => {
+                        // Define filler range logic
+                        // 0.15 duration per step used previously
+                        // If card 1 is active (0.15 -> 0.325)
+                        // Fill should happen from start of active to end of active
+                        const start = 0.15 + (index * 0.175);
+                        const end = start + 0.175;
+
+                        const isActive = index === activeCardIndex;
+                        const hasPassed = index < activeCardIndex;
+
+                        // Special check for Fan Out
+                        const isFanOut = viewState === 'fan-out';
+
+                        return (
+                            <CinematicCard
+                                key={step.id}
+                                step={step}
+                                index={index}
+                                isActive={isActive}
+                                hasPassed={hasPassed}
+                                isFanOut={isFanOut}
+                                globalScroll={scrollYProgress}
+                                fillRange={[start, end]}
+                                total={steps.length}
+                                isMobile={isMobile}
+                            />
+                        )
+                    })}
                 </div>
 
+                {/* Circular Indicators (Right Side) */}
+                <div style={{
+                    position: 'absolute',
+                    right: '5%',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1.5rem',
+                    zIndex: 50
+                }}>
+                    <AnimatePresence>
+                        {(activeCardIndex >= 0 || viewState === 'fan-out') && steps.map((_, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 20 }}
+                                transition={{ delay: i * 0.1 }}
+                            >
+                                <IndicatorDot
+                                    isActive={i === activeCardIndex}
+                                    isCompleted={i < activeCardIndex || viewState === 'fan-out'}
+                                    color={steps[i].color}
+                                />
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </div>
             </div>
         </section>
     );
 }
 
-// --- SECTION HEADER COMPONENT ---
-function SectionHeader({ progress }: { progress: MotionValue<number> }) {
-    // 1. FAST ENTRY: [0, 0.05]
-    const opacity = useTransform(progress, [0, 0.05], [0, 1]);
-    const scale = useTransform(progress, [0, 0.05], [0.8, 1]);
-    const y = useTransform(progress, [0, 0.05], [50, 0]);
-
-    return (
-        <motion.div
-            style={{
-                position: 'absolute',
-                top: '15vh',
-                textAlign: 'center',
-                zIndex: 10,
-                opacity,
-                scale,
-                y
-            }}
-        >
-            <h2 style={{
-                fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-                fontWeight: 'var(--font-weight-light)',
-                letterSpacing: 'var(--letter-spacing-tight)',
-                lineHeight: 1,
-                margin: 0,
-                color: 'var(--color-text-primary)'
-            }}>
-                Production <span style={{ fontFamily: 'var(--font-family-serif)', fontStyle: 'italic' }}>Pipeline</span>
-            </h2>
-        </motion.div>
-    );
-}
-
-// --- PIPELINE CARD COMPONENT (HYBRID LOGIC) ---
-function PipelineCard({ step, index, total, progress, isMobile }: {
+function CinematicCard({
+    step,
+    index,
+    isActive,
+    hasPassed,
+    isFanOut,
+    globalScroll,
+    fillRange,
+    total,
+    isMobile
+}: {
     step: any,
     index: number,
+    isActive: boolean,
+    hasPassed: boolean,
+    isFanOut: boolean,
+    globalScroll: MotionValue<number>,
+    fillRange: [number, number],
     total: number,
-    progress: MotionValue<number>,
     isMobile: boolean
 }) {
-    // 1. TRIGGERED ENTRY (The "Race")
-    // Trigger point: when user scrolls > 20% + stagger
-    // Mobile: Spaced out slightly more for cleaner "replace" feel? Or keep same.
-    const stagger = isMobile ? 0.15 : 0.1;
-    const triggerThreshold = 0.2 + (index * stagger);
-    const [hasTriggered, setHasTriggered] = useState(index === 0); // First card always visible/triggered? 
-    // Actually, first card should just be there or slide in? 
-    // Existing logic: index 0 triggers at 0.2. Before that? Offscreen? 
-    // Let's make index 0 start visible or trigger immediately.
-    // If index 0, trigger at 0.
+    // --- ANIMATION STATE LOGIC ---
 
-    useEffect(() => {
-        const threshold = index === 0 ? 0 : triggerThreshold;
-        const unsubscribe = progress.on("change", (latest) => {
-            if (latest >= threshold && !hasTriggered) {
-                setHasTriggered(true);
-            } else if (latest < threshold && hasTriggered) {
-                setHasTriggered(false);
+    const cardVariants: Variants = {
+        initial: {
+            z: -2000,
+            y: 0,
+            opacity: 0.4,
+            scale: 0.8,
+            filter: "blur(20px)",
+            rotateX: 0
+        },
+        active: {
+            z: 0,
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            filter: "blur(0px)",
+            rotateX: 0,
+            transition: {
+                duration: 1.2,
+                ease: [0.16, 1, 0.3, 1]
             }
-        });
-        return unsubscribe;
-    }, [progress, triggerThreshold, hasTriggered, index]);
-
-
-    // 2. POSITIONS
-    const screenH = typeof window !== 'undefined' ? window.innerHeight : 1000;
-    const offscreenY = screenH * 0.8; // Start from bottom
-
-    // Stack Position
-    const baseOffset = 0;
-    const stackGap = 100;
-
-    // Mobile: No stack gap (they overlap/replace). Desktop: Stack.
-    const targetStackY = isMobile
-        ? 0
-        : baseOffset + (index * stackGap);
-
-    // Spring Physics
-    const springConfig = { damping: 20, stiffness: 90, mass: 1 };
-    const rawY = useSpring(index === 0 ? targetStackY : offscreenY, springConfig);
-
-    useEffect(() => {
-        // If Mobile + Index 0: Always at target (static).
-        // Else: trigger logic.
-        if (isMobile && index === 0) {
-            rawY.set(targetStackY);
-        } else {
-            rawY.set(hasTriggered ? targetStackY : offscreenY);
+        },
+        exit: {
+            z: 500,
+            y: -1000,
+            opacity: 0,
+            scale: 1.2,
+            filter: "blur(10px)",
+            rotateX: 20,
+            transition: { duration: 0.8, ease: "easeInOut" }
+        },
+        fanOut: {
+            z: 0,
+            y: isMobile ? index * 40 : 0, // Vertical stack for mobile
+            x: isMobile ? 0 : ((index - (total - 1) / 2) * (320 + 40)),
+            opacity: 1,
+            scale: isMobile ? 0.9 : 0.85,
+            filter: "blur(0px)",
+            rotateX: 0,
+            transition: {
+                duration: 0.8,
+                delay: index * 0.05,
+                ease: "backOut"
+            }
         }
-    }, [hasTriggered, targetStackY, offscreenY, rawY, isMobile, index]);
+    };
 
-    // 3. DYNAMIC STACK LIFT (Desktop Only)
-    // As we scroll deeper (more cards enter), lift the whole group UP.
-    const dynamicLift = useTransform(
-        progress,
-        [0.2, 0.6, 0.8, 0.95],
-        [0, 150, 150, 0]
-    );
+    // Determine current variant
+    let currentVariant = "initial";
+    if (isFanOut) currentVariant = "fanOut";
+    else if (isActive) currentVariant = "active";
+    else if (hasPassed) currentVariant = "exit";
 
-    // 4. FAN PHASE (Desktop Only)
-    const fanStart = 0.8;
-    const fanEnd = 0.98;
-    const fanAdjustment = useTransform(
-        progress,
-        [fanStart, fanEnd],
-        [0, isMobile ? 0 : targetStackY]
-    );
-
-    // 5. OPACITY (Mobile Only - Fade Out Exiting Cards)
-    // Next card enters at `triggerThreshold + stagger`. 
-    // So this card should fade out around then.
-    // Last card stays visible.
-    const fadeStart = triggerThreshold + stagger;
-    const opacityMobile = useTransform(
-        progress,
-        [fadeStart, fadeStart + 0.05],
-        [1, 0]
-    );
-    // Desktop: Always 1 (managed by stacking order)
-    const opacity = isMobile && index < total - 1 ? opacityMobile : 1;
-
-
-    // Final Y Composition
-    // Mobile: Just rawY (Spring). 
-    // Desktop: rawY - lift - fan.
-    const finalY = useTransform(() => {
-        if (isMobile) return rawY.get();
-        return rawY.get() - dynamicLift.get() - fanAdjustment.get();
-    });
-
-
-    // X SPREAD (Fan Phase - Desktop Only)
-    const cardWidth = 260;
-    const gap = 20;
-    const totalFanWidth = (total * cardWidth) + ((total - 1) * gap);
-    const xFanTarget = (index * (cardWidth + gap)) - (totalFanWidth / 2) + (cardWidth / 2);
-
-    const xDesktop = useTransform(
-        progress,
-        [fanStart, fanEnd],
-        ['0px', `${xFanTarget}px`]
-    );
-
-    const x = isMobile ? 0 : xDesktop;
-    const rotateZ = useTransform(progress, [fanStart, fanEnd], ['0deg', '0deg']);
+    // Scroll Progress Bar Logic
+    const fillHeight = useTransform(globalScroll, fillRange, ["0%", "100%"]);
 
     return (
         <motion.div
+            initial="initial"
+            animate={currentVariant}
+            variants={cardVariants}
             style={{
                 position: 'absolute',
-                top: '22vh',
-                y: finalY,
-                x,
-                opacity, // Apply Opacity
-                rotateZ,
+                width: 'min(85vw, 450px)',
+                minHeight: '280px',
                 zIndex: index,
+                transformOrigin: 'center center'
             }}
         >
-            <LightCard step={step} />
-        </motion.div>
-    )
-}
-
-function LightCard({ step }: { step: any }) {
-    return (
-        <div style={{
-            width: '260px',
-            height: '320px', // REDUCED HEIGHT (was 380px)
-            background: '#ffffff',
-            border: '1px solid rgba(0,0,0,0.05)',
-            borderRadius: '24px',
-            padding: '1.5rem',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-start', // CHANGED from space-between
-            gap: '1rem', // ADDED GAP
-            boxShadow: '0 20px 40px -5px rgba(0, 0, 0, 0.1)',
-            color: 'var(--color-text-primary)',
-            textAlign: 'left',
-            position: 'relative',
-            overflow: 'hidden'
-        }}>
-
-            {/* Icon Area */}
             <div style={{
-                width: '50px',
-                height: '50px',
-                flexShrink: 0,
-                borderRadius: '50%',
-                background: 'var(--color-bg-secondary)',
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                borderRadius: '24px',
+                background: 'rgba(20, 20, 25, 0.9)', // High opacity for clarity
+                backdropFilter: 'blur(40px)', // High blur for glass feel
+                WebkitBackdropFilter: 'blur(40px)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderTop: '1px solid rgba(255,255,255,0.2)',
+                boxShadow: `0 30px 60px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,0,0,0.3)`,
+                padding: '3rem',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                // marginBottom: '1rem', // REMOVED (Handled by gap)
-                border: `1px solid ${step.color}`
+                flexDirection: 'column',
+                gap: '1.5rem',
+                overflow: 'hidden'
             }}>
-                <step.icon size={24} color={step.color} strokeWidth={1.5} />
-            </div>
-
-            {/* Content */}
-            <div style={{ zIndex: 2 }}>
-                <h3 style={{
-                    fontFamily: 'var(--font-family-serif)',
-                    fontSize: '1.3rem',
-                    fontWeight: 600,
-                    marginBottom: '0.5rem', // REDUCED
-                    lineHeight: 1.1,
-                    color: '#1d1d1f'
+                {/* Scroll Progress Bar (Bottom) */}
+                <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: '6px',
+                    background: 'rgba(255,255,255,0.05)'
                 }}>
-                    {step.title}
-                </h3>
+                    <motion.div style={{
+                        height: '100%',
+                        width: fillHeight,
+                        background: step.color,
+                        boxShadow: `0 0 15px ${step.color}`
+                    }} />
+                </div>
 
+                {/* Neon Edge Glow (Top) */}
+                <div style={{
+                    position: 'absolute',
+                    top: 0, left: 0, right: 0, height: '2px',
+                    background: `linear-gradient(90deg, transparent, ${step.color}, transparent)`,
+                    opacity: 1
+                }} />
+
+                {/* Header */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{
+                        minWidth: '48px', height: '48px',
+                        borderRadius: '12px',
+                        background: 'rgba(255,255,255,0.05)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        border: `1px solid ${step.color}40`,
+                        color: step.color
+                    }}>
+                        <step.icon size={24} />
+                    </div>
+                    <h3 style={{
+                        margin: 0,
+                        fontSize: '1.6rem', // Slightly smaller
+                        fontFamily: 'var(--font-family-serif)',
+                        fontWeight: 500,
+                        color: '#fff',
+                        whiteSpace: 'normal',
+                        lineHeight: 1.2
+                    }}>
+                        {step.title}
+                    </h3>
+                </div>
+
+                {/* Body */}
                 <p style={{
-                    fontFamily: 'var(--font-family-sans)',
-                    fontSize: '0.85rem', // SMALLER TEXT
-                    lineHeight: 1.4,
-                    color: '#6e6e73'
+                    margin: 0,
+                    fontSize: '1rem',
+                    lineHeight: 1.6,
+                    color: 'rgba(255,255,255,0.95)',
+                    fontWeight: 300,
+                    textShadow: '0 1px 2px rgba(0,0,0,0.5)'
                 }}>
                     {step.text}
                 </p>
-            </div>
 
-            {/* Decorative Number */}
-            <div style={{
-                fontSize: '3rem',
-                fontWeight: 700,
-                color: 'rgba(0,0,0,0.03)',
-                position: 'absolute',
-                bottom: '-0.5rem',
-                right: '0.5rem',
-                fontFamily: 'var(--font-family-sans)',
-                lineHeight: 1,
-                zIndex: 1
-            }}>
-                0{step.id}
+                {/* Tech Decoration */}
+                <div style={{
+                    marginTop: 'auto',
+                    paddingTop: '1rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    fontSize: '0.7rem',
+                    color: 'rgba(255,255,255,0.3)',
+                    fontFamily: 'monospace',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em'
+                }}>
+                    <span>Step 0{step.id}</span>
+
+                </div>
             </div>
-        </div>
+        </motion.div>
     );
+}
+
+function IndicatorDot({ isActive, isCompleted, color }: { isActive: boolean, isCompleted: boolean, color: string }) {
+    return (
+        <motion.div
+            animate={{
+                scale: isActive ? 1.5 : 1,
+                opacity: (isActive || isCompleted) ? 1 : 0.3,
+                borderColor: isActive ? color : '#fff',
+                background: isCompleted ? color : 'transparent'
+            }}
+            style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                border: '2px solid #fff',
+                boxShadow: isActive ? `0 0 15px ${color}` : 'none'
+            }}
+        />
+    )
 }
