@@ -10,6 +10,12 @@ export interface VideoItem {
 
 export const featuredWorkVideos: VideoItem[] = [
   {
+    id: 'nike-air-jordan',
+    src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1771634791/Nike_Shoes_vjbnke.mp4',
+    title: 'Nike Air Jordan',
+    caption: 'Nike — Product Aesthetic Commercial'
+  },
+  {
     id: 'chanel-perfume',
     src: 'https://res.cloudinary.com/dxez9kmnn/video/upload/v1770579190/Chanel_Perfume_Video_dztprl.mp4',
     title: 'Chanel Perfume',
