@@ -156,6 +156,24 @@ export function Footer() {
                 <Mail size={16} />
                 <span style={{ fontSize: '0.85rem' }}>virtualmodelstudiobd@gmail.com</span>
               </a>
+              <a
+                href="mailto:pranabprg@gmail.com"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  color: 'var(--color-silver)',
+                  textDecoration: 'none',
+                  opacity: 0.8,
+                  fontSize: '0.9rem',
+                  transition: 'opacity 0.2s',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.8')}
+              >
+                <Mail size={16} />
+                <span style={{ fontSize: '0.85rem' }}>pranabprg@gmail.com</span>
+              </a>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <a
                   href="https://www.facebook.com/profile.php?id=61569617226479"
