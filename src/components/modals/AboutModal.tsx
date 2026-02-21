@@ -624,6 +624,14 @@ function ContentLayer({ side, isActive, onBack, accentColor }: any) {
             {
                 title: "Brand Storytelling",
                 details: ["Campaign Direction", "Visual Identity Development", "Narrative Structuring", "Storyboarding", "Creative Consulting"]
+            },
+            {
+                title: "Immersive Experiences (AR/VR)",
+                details: ["WebGL Development", "Augmented Reality Filters", "Virtual Reality Showrooms", "Interactive Web Experiences", "3D Product Configurators"]
+            },
+            {
+                title: "Post-Production & Editing",
+                details: ["Color Grading", "Sound Design & Mixing", "Editorial Compositing", "Seamless Transitions", "Format Optimization for Social Content"]
             }
         ],
         ceoImage: "/assets/VMS-CEO.jpg",
@@ -643,6 +651,14 @@ function ContentLayer({ side, isActive, onBack, accentColor }: any) {
             {
                 title: "AI Solutioning",
                 details: ["Predictive Analytics", "Machine Learning Models", "Chatbot Integration", "Computer Vision", "Data Engineering"]
+            },
+            {
+                title: "Cybersecurity & Compliance",
+                details: ["Penetration Testing", "Data Encryption Protocols", "Zero-Trust Architecture", "Compliance Auditing (GDPR/HIPAA)", "Threat Modeling"]
+            },
+            {
+                title: "Web3 & Blockchain Integration",
+                details: ["Smart Contract Development", "Decentralized Application (dApp) Architecture", "Tokenomics Strategy", "Secure Wallet Integrations", "Ledger Audits"]
             }
         ],
         ceoImage: "/assets/PKG_IT-CEO.jpeg",
@@ -691,12 +707,41 @@ function ContentLayer({ side, isActive, onBack, accentColor }: any) {
             overflowY: isActive ? 'auto' : 'hidden',
             overflowX: 'hidden',
             maxHeight: '100vh',
-            scrollbarWidth: 'none',
-        }}>
+        }} className={`custom-scrollbar ${side}-scroll`}>
             <style>{`
-                /* Hide scrollbar for Chrome/Safari/Opera */
-                div::-webkit-scrollbar {
-                    display: none;
+                /* Neon Pulse Scrollbar */
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 6px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: rgba(255, 255, 255, 0.2);
+                    border-radius: 10px;
+                    transition: all 0.3s ease;
+                }
+                /* VMS Theme (Purple) */
+                .vms-scroll::-webkit-scrollbar-thumb:hover,
+                .vms-scroll::-webkit-scrollbar-thumb:active {
+                    background: #a855f7;
+                    box-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7;
+                }
+                /* PKG Theme (Cyan) */
+                .pkg-scroll::-webkit-scrollbar-thumb:hover,
+                .pkg-scroll::-webkit-scrollbar-thumb:active {
+                    background: #06b6d4;
+                    box-shadow: 0 0 10px #06b6d4, 0 0 20px #06b6d4;
+                }
+                
+                /* Firefox Support */
+                .vms-scroll {
+                    scrollbar-width: thin;
+                    scrollbar-color: rgba(168, 85, 247, 0.5) transparent;
+                }
+                .pkg-scroll {
+                    scrollbar-width: thin;
+                    scrollbar-color: rgba(6, 182, 212, 0.5) transparent;
                 }
             `}</style>
 

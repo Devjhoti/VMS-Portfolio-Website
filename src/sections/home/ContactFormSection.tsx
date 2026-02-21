@@ -73,7 +73,7 @@ export function ContactFormSection() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 overflow: 'hidden',
-                background: '#0a0a0a', // Fallback
+                background: '#000', // Changed to pure black for seamless transition
                 perspective: '1000px'
             }}
         >
@@ -86,6 +86,18 @@ export function ContactFormSection() {
                 bottom: 0,
                 background: 'radial-gradient(circle at 50% 50%, #1D263D 0%, #000000 100%)',
                 zIndex: 0
+            }} />
+
+            {/* Seamless Transition Overlay for previous section */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '20vh',
+                background: 'linear-gradient(to bottom, #000 0%, transparent 100%)',
+                zIndex: 1,
+                pointerEvents: 'none'
             }} />
 
             {/* Ambient Copper Orbs */}

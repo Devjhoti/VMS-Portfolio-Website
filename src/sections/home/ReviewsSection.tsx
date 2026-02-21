@@ -159,7 +159,7 @@ export function ReviewsSection() {
                 minHeight: '100vh', // Allow scroll on mobile
                 height: isMobile ? 'auto' : '100vh',
                 overflow: isMobile ? 'visible' : 'hidden', // Allow scroll on mobile
-                background: '#0F1115',
+                background: '#000',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -174,6 +174,18 @@ export function ReviewsSection() {
                 top: 0, left: 0, right: 0, bottom: 0,
                 background: 'radial-gradient(circle at center, #1a1f2e 0%, #000000 100%)',
                 zIndex: 0
+            }} />
+
+            {/* Seamless Transition Overlay for next section */}
+            <div style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '20vh',
+                background: 'linear-gradient(to top, #000 0%, transparent 100%)',
+                zIndex: 1,
+                pointerEvents: 'none'
             }} />
 
             {/* Curtain Reveal */}

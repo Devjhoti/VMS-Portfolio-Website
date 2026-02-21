@@ -79,7 +79,7 @@ export function ProductionPipeline() {
             ref={containerRef}
             style={{
                 height: '600vh',
-                background: '#0a0a0a',
+                background: '#000',
                 color: '#fff',
                 position: 'relative'
             }}
@@ -99,8 +99,32 @@ export function ProductionPipeline() {
                 <div style={{
                     position: 'absolute',
                     inset: 0,
-                    background: 'radial-gradient(circle at 50% 30%, rgba(20,20,30,1) 0%, #000 70%)',
+                    background: 'radial-gradient(circle at 50% 50%, rgba(20,20,30,1) 0%, #000 70%)',
                     zIndex: 0
+                }} />
+
+                {/* Seamless Transition Overlay for Featured Work section */}
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '20vh',
+                    background: 'linear-gradient(to bottom, #000 0%, transparent 100%)',
+                    zIndex: 1,
+                    pointerEvents: 'none'
+                }} />
+
+                {/* Seamless Transition Overlay for Philosophy Strip section */}
+                <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: '30vh', // Slightly taller fade for the bottom to smoothly hide the perspective grid
+                    background: 'linear-gradient(to top, #000 0%, transparent 100%)',
+                    zIndex: 1,
+                    pointerEvents: 'none'
                 }} />
 
                 {/* Grid Floor */}
@@ -198,7 +222,7 @@ export function ProductionPipeline() {
                     zIndex: 50
                 }}>
                     <AnimatePresence>
-                        {(activeCardIndex >= 0 || viewState === 'fan-out') && steps.map((_, i) => (
+                        {(activeCardIndex >= 0 && viewState !== 'fan-out') && steps.map((_, i) => (
                             <motion.div
                                 key={i}
                                 initial={{ opacity: 0, x: 20 }}
@@ -208,7 +232,7 @@ export function ProductionPipeline() {
                             >
                                 <IndicatorDot
                                     isActive={i === activeCardIndex}
-                                    isCompleted={i < activeCardIndex || viewState === 'fan-out'}
+                                    isCompleted={i < activeCardIndex}
                                     color={steps[i].color}
                                 />
                             </motion.div>
@@ -247,14 +271,15 @@ function CinematicCard({
         initial: {
             z: -2000,
             y: 0,
-            opacity: 0.4,
-            scale: 0.8,
-            filter: "blur(20px)",
+            opacity: 0.6,
+            scale: 0.9,
+            filter: "blur(3px)",
             rotateX: 0
         },
         active: {
             z: 0,
             y: 0,
+            x: 0, // Reset X just in case it was modified
             opacity: 1,
             scale: 1,
             filter: "blur(0px)",
@@ -276,7 +301,7 @@ function CinematicCard({
         fanOut: {
             z: 0,
             y: isMobile ? index * 40 : 0, // Vertical stack for mobile
-            x: isMobile ? 0 : ((index - (total - 1) / 2) * (320 + 40)),
+            x: isMobile ? 0 : ((index - (total - 1) / 2) * 380), // Reduced spacing to bring cards closer together (based on 420px * 0.85 scale width + small gap)
             opacity: 1,
             scale: isMobile ? 0.9 : 0.85,
             filter: "blur(0px)",
@@ -305,9 +330,9 @@ function CinematicCard({
             variants={cardVariants}
             style={{
                 position: 'absolute',
-                width: 'min(85vw, 450px)',
-                minHeight: '280px',
-                zIndex: index,
+                width: 'min(85vw, 420px)', // Fixed width to ensure stable fanOut math
+                height: isMobile ? '400px' : '340px', // Fixed uniform height so all 4 cards are geometrically identical regardless of text length
+                zIndex: isFanOut ? index : index, // Guarantee stable painting order
                 transformOrigin: 'center center'
             }}
         >

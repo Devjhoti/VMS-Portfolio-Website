@@ -15,7 +15,7 @@ export function PhilosophyStrip() {
   });
 
   return (
-    <section ref={containerRef} style={{ minHeight: '300vh', position: 'relative', zIndex: 11, background: 'var(--color-bg-primary)' }}>
+    <section ref={containerRef} style={{ minHeight: '300vh', position: 'relative', zIndex: 11, background: '#000', color: '#fff' }}>
       <div style={{
         position: 'sticky',
         top: 0,

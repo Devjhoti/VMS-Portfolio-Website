@@ -102,6 +102,7 @@ export function BrandLogosSection() {
       ref={containerRef}
       style={{
         padding: '10vh 0',
+        paddingBottom: '0',
         background: '#050505',
         position: 'relative',
         overflow: 'hidden',
