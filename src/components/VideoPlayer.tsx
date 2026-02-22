@@ -6,7 +6,7 @@ import { useRef, useState, useEffect } from 'react';
  */
 function getThumbnail(videoUrl: string): string {
   return videoUrl
-    .replace(/\/upload\//, '/upload/so_2,f_jpg/')
+    .replace(/\/upload\//, '/upload/q_auto,f_auto,so_2,f_jpg/')
     .replace(/\.mp4$/i, '.jpg');
 }
 

@@ -57,7 +57,7 @@ export function HeroSection() {
             zIndex: 0
           }}
         >
-          <source src="https://res.cloudinary.com/dxez9kmnn/video/upload/v1770965997/Vms_Website_Banner_f9jkso.mp4" type="video/mp4" />
+          <source src="https://res.cloudinary.com/dxez9kmnn/video/upload/q_auto,f_auto/v1770965997/Vms_Website_Banner_f9jkso.mp4" type="video/mp4" />
         </video>
 
         {/* Dark Overlay */}

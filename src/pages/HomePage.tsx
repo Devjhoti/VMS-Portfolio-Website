@@ -1,18 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { PageLayout } from '../components/layout/PageLayout';
 import { HeroSection } from '../sections/home/HeroSection';
 import { WhatWeDoSection } from '../sections/home/WhatWeDoSection';
-import { BrandLogosSection } from '../sections/home/BrandLogosSection';
-import { FeaturedWorkSection } from '../sections/home/FeaturedWorkSection';
-import { PhilosophyStrip } from '../sections/home/PhilosophyStrip';
-import { EditorialGrid } from '../sections/home/EditorialGrid';
-import { MicroStatement } from '../sections/home/MicroStatement';
-import { VisionArchitectureSection } from '../sections/home/VisionArchitectureSection';
-import { ReviewsSection } from '../sections/home/ReviewsSection';
-import { ContactFormSection } from '../sections/home/ContactFormSection';
-import { Footer } from '../sections/home/Footer';
-import { ProductionPipeline } from '../sections/home/ProductionPipeline';
 import { AboutModal } from '../components/modals/AboutModal';
+
+// Lazy loading below-the-fold components
+const BrandLogosSection = lazy(() => import('../sections/home/BrandLogosSection').then(m => ({ default: m.BrandLogosSection })));
+const FeaturedWorkSection = lazy(() => import('../sections/home/FeaturedWorkSection').then(m => ({ default: m.FeaturedWorkSection })));
+const PhilosophyStrip = lazy(() => import('../sections/home/PhilosophyStrip').then(m => ({ default: m.PhilosophyStrip })));
+const EditorialGrid = lazy(() => import('../sections/home/EditorialGrid').then(m => ({ default: m.EditorialGrid })));
+const MicroStatement = lazy(() => import('../sections/home/MicroStatement').then(m => ({ default: m.MicroStatement })));
+const VisionArchitectureSection = lazy(() => import('../sections/home/VisionArchitectureSection').then(m => ({ default: m.VisionArchitectureSection })));
+const ReviewsSection = lazy(() => import('../sections/home/ReviewsSection').then(m => ({ default: m.ReviewsSection })));
+const ContactFormSection = lazy(() => import('../sections/home/ContactFormSection').then(m => ({ default: m.ContactFormSection })));
+const Footer = lazy(() => import('../sections/home/Footer').then(m => ({ default: m.Footer })));
+const ProductionPipeline = lazy(() => import('../sections/home/ProductionPipeline').then(m => ({ default: m.ProductionPipeline })));
 
 export function HomePage() {
   useEffect(() => {
@@ -58,16 +60,19 @@ export function HomePage() {
       <AboutModal />
       <HeroSection />
       <WhatWeDoSection />
-      <BrandLogosSection />
-      <FeaturedWorkSection />
-      <ProductionPipeline />
-      <PhilosophyStrip />
-      <EditorialGrid />
-      <MicroStatement />
-      <VisionArchitectureSection />
-      <ReviewsSection />
-      <ContactFormSection />
-      <Footer />
+
+      <Suspense fallback={<div style={{ height: '50vh', background: 'var(--color-bg-primary)' }} />}>
+        <BrandLogosSection />
+        <FeaturedWorkSection />
+        <ProductionPipeline />
+        <PhilosophyStrip />
+        <EditorialGrid />
+        <MicroStatement />
+        <VisionArchitectureSection />
+        <ReviewsSection />
+        <ContactFormSection />
+        <Footer />
+      </Suspense>
     </PageLayout>
   );
 }

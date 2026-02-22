@@ -108,10 +108,7 @@ export function Footer() {
                     href={`#${item.toLowerCase()}`}
                     onClick={(e) => {
                       e.preventDefault();
-                      if (item === 'Work') {
-                        window.dispatchEvent(new Event('open-work-grid'));
-                        document.getElementById('editorial')?.scrollIntoView({ behavior: 'smooth' });
-                      }
+                      if (item === 'Work') document.getElementById('editorial')?.scrollIntoView({ behavior: 'smooth' });
                       if (item === 'About') window.dispatchEvent(new Event('open-about-modal'));
                       if (item === 'Contact') document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
                     }}

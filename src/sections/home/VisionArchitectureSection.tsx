@@ -147,6 +147,9 @@ export function VisionArchitectureSection() {
                                 <img
                                     src="/assets/VMS-CEO.jpg"
                                     alt="Dev Jhoti Sutradhar"
+                                    loading="lazy"
+                                    width={280}
+                                    height={280}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
                             </div>
@@ -192,7 +195,10 @@ export function VisionArchitectureSection() {
                             <img
                                 src="/assets/VMS-LOGO-TR.png"
                                 alt="VMS Logo"
-                                style={{ height: '40px', opacity: 0.8 }}
+                                loading="lazy"
+                                width={120}
+                                height={40}
+                                style={{ height: '40px', width: 'auto', opacity: 0.8 }}
                             />
                         </motion.div>
 
@@ -232,6 +238,9 @@ export function VisionArchitectureSection() {
                                 <img
                                     src="/assets/PKG_IT-CEO.jpeg"
                                     alt="Pranab Kumar"
+                                    loading="lazy"
+                                    width={280}
+                                    height={280}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
                                 />
                             </div>
@@ -277,7 +286,10 @@ export function VisionArchitectureSection() {
                             <img
                                 src="/assets/PKG_IT-LOGO.png"
                                 alt="PKG IT Logo"
-                                style={{ height: '50px', opacity: 0.9 }}
+                                loading="lazy"
+                                width={150}
+                                height={50}
+                                style={{ height: '50px', width: 'auto', opacity: 0.9 }}
                             />
                         </motion.div>
                     </div>

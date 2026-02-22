@@ -794,8 +794,12 @@ function ContentLayer({ side, isActive, onBack, accentColor }: any) {
                             <img
                                 src="/assets/PKG_IT-LOGO.png"
                                 alt="PKG IT"
+                                loading="lazy"
+                                width={150}
+                                height={50}
                                 style={{
                                     height: '50px',
+                                    width: 'auto',
                                     objectFit: 'contain',
                                     filter: 'brightness(1.1) contrast(1.1)' // Slight enhancement
                                 }}

@@ -158,6 +158,9 @@ function MarqueeGroup() {
           <img
             src={logo.src}
             alt={logo.name}
+            loading="lazy"
+            width={200}
+            height={110}
             className="logo-image"
           />
         </div>
