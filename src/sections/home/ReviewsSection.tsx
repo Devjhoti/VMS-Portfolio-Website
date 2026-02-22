@@ -308,7 +308,7 @@ function MobileReviewsView({ onSelect }: { onSelect: (r: Review) => void }) {
                             style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
                         />
                         <div>
-                            <h4 style={{ margin: 0, color: 'white', fontSize: '0.9rem', fontWeight: 600 }}>{review.name}</h4>
+                            <h3 style={{ margin: 0, color: 'white', fontSize: '0.9rem', fontWeight: 600 }}>{review.name}</h3>
                             <p style={{ margin: 0, color: 'var(--color-copper)', fontSize: '0.75rem' }}>{review.brand}</p>
                         </div>
                     </div>
@@ -439,7 +439,7 @@ function BouncingCard({
                     style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
                 />
                 <div>
-                    <h4 style={{ margin: 0, color: 'white', fontSize: '0.9rem', fontWeight: 600 }}>{review.name}</h4>
+                    <h3 style={{ margin: 0, color: 'white', fontSize: '0.9rem', fontWeight: 600 }}>{review.name}</h3>
                     <p style={{ margin: 0, color: 'var(--color-copper)', fontSize: '0.75rem' }}>{review.brand}</p>
                 </div>
             </div>

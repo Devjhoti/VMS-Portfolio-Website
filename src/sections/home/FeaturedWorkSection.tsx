@@ -136,7 +136,7 @@ export function FeaturedWorkSection() {
               width: isMobile ? '80vw' : 'auto', // Takes full screen space natively on mobile
               marginLeft: isMobile ? '0' : '2vw'
             }}>
-              <h1 style={{
+              <h2 style={{
                 fontSize: 'clamp(2rem, 10vw, 6rem)', // Reduced responsive text size for mobile layout to prevent overlap
                 fontWeight: 800,
                 margin: 0,
@@ -149,7 +149,7 @@ export function FeaturedWorkSection() {
                 letterSpacing: '-0.02em',
               }}>
                 Let's shape<br />your<br />imagination.
-              </h1>
+              </h2>
             </div>
           </div>
         </motion.div>

@@ -196,7 +196,7 @@ export function ContactFormSection() {
 
                 <style>{`
                     .glass-input::placeholder {
-                        color: rgba(255, 255, 255, 0.4);
+                        color: rgba(255, 255, 255, 0.6);
                         font-weight: 300;
                     }
                 `}</style>
@@ -243,6 +243,7 @@ export function ContactFormSection() {
                                     name="name"
                                     required
                                     placeholder="YOUR NAME"
+                                    aria-label="Your Name"
                                     style={inputStyle}
                                     onFocus={(e) => {
                                         e.currentTarget.style.borderBottomColor = 'var(--color-copper)';
@@ -261,6 +262,7 @@ export function ContactFormSection() {
                                     name="email"
                                     required
                                     placeholder="EMAIL ADDRESS"
+                                    aria-label="Email Address"
                                     style={inputStyle}
                                     onFocus={(e) => {
                                         e.currentTarget.style.borderBottomColor = 'var(--color-copper)';
@@ -280,6 +282,7 @@ export function ContactFormSection() {
                                 type="tel"
                                 name="phone"
                                 placeholder="PHONE (OPTIONAL)"
+                                aria-label="Phone Number"
                                 style={inputStyle}
                                 onFocus={(e) => {
                                     e.currentTarget.style.borderBottomColor = 'var(--color-copper)';
@@ -299,6 +302,7 @@ export function ContactFormSection() {
                                 required
                                 rows={2}
                                 placeholder="TELL US ABOUT YOUR PROJECT..."
+                                aria-label="Project Details or Message"
                                 style={{ ...inputStyle, resize: 'none', overflow: 'hidden' }}
                                 onFocus={(e) => {
                                     e.currentTarget.style.borderBottomColor = 'var(--color-copper)';

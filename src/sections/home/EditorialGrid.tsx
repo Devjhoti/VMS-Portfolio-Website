@@ -243,7 +243,7 @@ function GridCard({ video, index, colIndex, isMobile }: { video: any, index: num
       </div>
 
       <div>
-        <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 500 }}>{video.title}</h4>
+        <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 500 }}>{video.title}</h3>
         <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>{video.caption}</p>
       </div>
     </motion.div>

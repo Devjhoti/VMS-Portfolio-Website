@@ -98,7 +98,7 @@ export function Footer() {
 
           {/* Column 2: Sitemap */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'calc(var(--space-md) * 0.75)' }}>
-            <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.5, marginBottom: '0.5rem' }}>
+            <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.7, marginBottom: '0.5rem' }}>
               Sitemap
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -131,7 +131,7 @@ export function Footer() {
 
           {/* Column 3: Connect */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'calc(var(--space-md) * 0.75)' }}>
-            <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.5, marginBottom: '0.5rem' }}>
+            <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.7, marginBottom: '0.5rem' }}>
               Connect
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -229,7 +229,7 @@ export function Footer() {
 
           {/* Column 4: Location */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'calc(var(--space-md) * 0.75)' }}>
-            <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.5, marginBottom: '0.5rem' }}>
+            <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.7, marginBottom: '0.5rem' }}>
               Location
             </h3>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>

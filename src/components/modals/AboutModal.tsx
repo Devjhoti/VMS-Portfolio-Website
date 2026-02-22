@@ -865,7 +865,7 @@ function ContentLayer({ side, isActive, onBack, accentColor }: any) {
                                     }}
                                 />
                                 <div>
-                                    <h5 style={{ margin: 0, fontSize: '1.1rem', color: 'white', fontWeight: 600 }}>{content.ceoName}</h5>
+                                    <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'white', fontWeight: 600 }}>{content.ceoName}</h3>
                                     <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                                         Founder & CEO
                                     </span>
