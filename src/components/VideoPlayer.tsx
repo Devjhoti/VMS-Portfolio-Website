@@ -165,12 +165,19 @@ export function VideoPlayer({ src, poster, className = '', style = {} }: VideoPl
       className={className}
       style={{
         position: 'relative',
-        width: '100%',
-        height: isFullscreen ? '100vh' : 'auto', // Handle container height in fullscreen
         cursor: 'pointer',
         overflow: 'hidden',
-        background: 'var(--color-bg-secondary)',
-        ...style
+        ...style,
+        ...(isFullscreen ? {
+          width: '100vw',
+          height: '100vh',
+          background: '#000', // Pitch black letterboxing
+          borderRadius: 0,
+        } : {
+          width: '100%',
+          height: 'auto',
+          background: 'var(--color-bg-secondary)',
+        })
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -187,11 +194,18 @@ export function VideoPlayer({ src, poster, className = '', style = {} }: VideoPl
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleVideoEnded}
         style={{
-          width: '100%',
-          height: '100%',
-          objectFit: isFullscreen ? 'contain' : (style.objectFit as any || 'cover'),
           display: 'block',
-          ...style
+          ...style,
+          ...(isFullscreen ? {
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain', // Enforce contain in fullscreen
+            background: '#000'
+          } : {
+            width: '100%',
+            height: '100%',
+            objectFit: (style as any).objectFit || 'cover'
+          })
         }}
       />
 

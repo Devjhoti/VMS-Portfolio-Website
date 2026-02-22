@@ -11,11 +11,12 @@ export function ContactFormSection() {
         offset: ["start end", "center center"]
     });
 
-    // Parallax & Reveal Animations
-    const scale = useTransform(scrollYProgress, [0, 1], [0.85, 1]);
-    const opacity = useTransform(scrollYProgress, [0, 0.6], [0, 1]);
-    const y = useTransform(scrollYProgress, [0, 1], [100, 0]);
-    const rotateX = useTransform(scrollYProgress, [0, 1], [15, 0]);
+    // Dramatic 3D Parallax & Reveal Animations
+    const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.75, 0.95, 1]);
+    const opacity = useTransform(scrollYProgress, [0, 0.4, 0.8], [0, 1, 1]);
+    const y = useTransform(scrollYProgress, [0, 0.5, 1], [200, 50, 0]);
+    const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [30, 10, 0]);
+    const z = useTransform(scrollYProgress, [0, 0.5, 1], [-300, -50, 0]); // Push deep into Z-axis
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -73,18 +74,18 @@ export function ContactFormSection() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 overflow: 'hidden',
-                background: '#000', // Changed to pure black for seamless transition
-                perspective: '1000px'
+                background: 'transparent',
+                perspective: '1500px' // Deepened 3D perspective
             }}
         >
-            {/* Animated Background Gradient */}
+            {/* Animated Background Gradient fading to glassmorphism */}
             <div style={{
                 position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'radial-gradient(circle at 50% 50%, #1D263D 0%, #000000 100%)',
+                inset: 0,
+                // Start solid black on top, fade to transparent at the bottom
+                background: 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.8) 40%, rgba(5, 5, 5, 0.65) 100%)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
                 zIndex: 0
             }} />
 
@@ -164,12 +165,15 @@ export function ContactFormSection() {
                     opacity,
                     y,
                     rotateX,
+                    z, // Add deep Z transform
                     background: 'rgba(255, 255, 255, 0.03)',
-                    backdropFilter: 'blur(20px)',
+                    backdropFilter: 'blur(30px)', // Increased blur for cinematic separation over video
+                    WebkitBackdropFilter: 'blur(30px)',
                     border: '1px solid rgba(255, 255, 255, 0.05)',
-                    borderRadius: '20px',
-                    padding: 'clamp(2rem, 5vw, 4rem)',
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                    borderRadius: '24px',
+                    padding: 'clamp(2.5rem, 5vw, 4rem)', // Slightly increased padding
+                    boxShadow: '0 30px 60px -12px rgba(0, 0, 0, 0.6), inset 0 0 100px rgba(0, 0, 0, 0.3)', // Richer 3D shadow
+                    transformStyle: 'preserve-3d'
                 }}
             >
                 <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
