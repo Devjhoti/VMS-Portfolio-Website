@@ -81,30 +81,64 @@ export function VideoPlayer({ src, poster, className = '', style = {} }: VideoPl
   };
 
   // Toggle Fullscreen
-  const toggleFullscreen = (e: React.MouseEvent) => {
+  const toggleFullscreen = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!containerRef.current) return;
 
-    if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen().catch((err) => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
-      });
-      setIsFullscreen(true);
+    const doc = document as any;
+    const container = containerRef.current as any;
+    const video = videoRef.current as any;
+
+    if (!doc.fullscreenElement && !doc.webkitFullscreenElement) {
+      try {
+        if (container?.requestFullscreen) {
+          await container.requestFullscreen();
+          setIsFullscreen(true);
+        } else if (container?.webkitRequestFullscreen) {
+          await container.webkitRequestFullscreen();
+          setIsFullscreen(true);
+        } else if (video?.webkitEnterFullscreen) {
+          video.webkitEnterFullscreen(); // iOS Safari fallback for iPhone
+          // Note: iOS native player doesn't trigger standard resize, but handles its own UI.
+          setIsFullscreen(true);
+        }
+      } catch (err) {
+        console.error("Fullscreen error:", err);
+      }
     } else {
-      document.exitFullscreen();
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (doc.webkitExitFullscreen) {
+        doc.webkitExitFullscreen();
+      }
       setIsFullscreen(false);
     }
   };
 
-  // Listen for fullscreen change (e.g., via Esc key)
+  // Listen for fullscreen change (e.g., via Esc key or native exit)
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      setIsFullscreen(!!(document.fullscreenElement || (document as any).webkitFullscreenElement));
     };
 
+    const handleWebkitEndFullscreen = () => {
+      setIsFullscreen(false);
+    };
+
+    const videoNode = videoRef.current;
+
     document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // iOS/Mac Safari
+
+    if (videoNode) {
+      videoNode.addEventListener('webkitendfullscreen', handleWebkitEndFullscreen); // iOS iPhone native exit
+    }
+
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      if (videoNode) {
+        videoNode.removeEventListener('webkitendfullscreen', handleWebkitEndFullscreen);
+      }
     };
   }, []);
 
@@ -172,6 +206,9 @@ export function VideoPlayer({ src, poster, className = '', style = {} }: VideoPl
         background: 'var(--color-bg-secondary)',
         ...style,
         ...(isFullscreen && {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           width: '100vw',
           height: '100vh',
           background: '#000', // Pitch black letterboxing
@@ -199,8 +236,14 @@ export function VideoPlayer({ src, poster, className = '', style = {} }: VideoPl
           objectFit: (style as any).objectFit || 'cover',
           ...style,
           ...(isFullscreen && {
+            width: '100%',
+            height: '100%', // Enforces full height over any passed style
+            maxWidth: '100%',
+            maxHeight: '100%',
             objectFit: 'contain', // Enforce contain in fullscreen
-            background: '#000'
+            background: 'transparent',
+            margin: 'auto', // Ensure it centers within flex container
+            aspectRatio: 'auto' // Reset any inherited aspect ratio
           })
         }}
       />
