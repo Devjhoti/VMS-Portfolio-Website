@@ -3,8 +3,17 @@ import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { VideoPlayer } from '../../components/VideoPlayer';
 import { editorialVideos, featuredWorkVideos } from '../../data/videos';
 
-// Combine all videos for the "See More" overlay
 const allVideos = [...editorialVideos, ...featuredWorkVideos];
+
+// Helper to check if any video is currently full screen natively
+const isVideoFullscreen = () => {
+  if (document.fullscreenElement || (document as any).webkitFullscreenElement) return true;
+  const videos = document.querySelectorAll('video');
+  for (let i = 0; i < videos.length; i++) {
+    if ((videos[i] as any).webkitDisplayingFullscreen) return true;
+  }
+  return false;
+};
 
 export function EditorialGrid() {
   const containerRef = useRef(null);
@@ -17,9 +26,13 @@ export function EditorialGrid() {
     const handleOpen = () => setShowGrid(true);
 
     const handleResize = () => {
+      // Prevent rearranging grid (which unmounts component) if video is fullscreen
+      if (isVideoFullscreen()) return;
+
       const width = window.innerWidth;
-      if (width < 768) {
-        // Mobile
+      const height = window.innerHeight;
+      if (width < 768 || (width < 1000 && height < 500)) {
+        // Mobile (including landscape phone)
         setVisibleCount(6);
         setColumns(1);
       } else if (width < 1024) {
@@ -38,9 +51,18 @@ export function EditorialGrid() {
 
     window.addEventListener('open-work-grid', handleOpen);
     window.addEventListener('resize', handleResize);
+
+    // Recalculate layout when exiting fullscreen in case device was rotated while in fullscreen
+    document.addEventListener('fullscreenchange', handleResize);
+    document.addEventListener('webkitfullscreenchange', handleResize);
+    document.addEventListener('webkitendfullscreen', handleResize, true); // capture phase for iOS native exits
+
     return () => {
       window.removeEventListener('open-work-grid', handleOpen);
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('fullscreenchange', handleResize);
+      document.removeEventListener('webkitfullscreenchange', handleResize);
+      document.removeEventListener('webkitendfullscreen', handleResize, true);
     };
   }, []);
 
@@ -172,7 +194,7 @@ function MasonryGrid({ videos, columns }: { videos: any[], columns: number }) {
         <div key={colIndex} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)', flex: 1 }}>
           {colVideos.map((video: any, index: number) => (
             <GridCard
-              key={video.id + index}
+              key={video.id}
               video={video}
               index={index}
               colIndex={colIndex}
@@ -332,13 +354,25 @@ function VideoGridOverlay({ videos, onClose }: { videos: any[], onClose: () => v
 
   useEffect(() => {
     const checkColumns = () => {
-      if (window.innerWidth < 768) setColumns(1);
-      else if (window.innerWidth < 1024) setColumns(2);
+      if (isVideoFullscreen()) return;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      if (width < 768 || (width < 1000 && height < 500)) setColumns(1);
+      else if (width < 1024) setColumns(2);
       else setColumns(3);
     };
     checkColumns();
     window.addEventListener('resize', checkColumns);
-    return () => window.removeEventListener('resize', checkColumns);
+    document.addEventListener('fullscreenchange', checkColumns);
+    document.addEventListener('webkitfullscreenchange', checkColumns);
+    document.addEventListener('webkitendfullscreen', checkColumns, true);
+
+    return () => {
+      window.removeEventListener('resize', checkColumns);
+      document.removeEventListener('fullscreenchange', checkColumns);
+      document.removeEventListener('webkitfullscreenchange', checkColumns);
+      document.removeEventListener('webkitendfullscreen', checkColumns, true);
+    };
   }, []);
 
   return (

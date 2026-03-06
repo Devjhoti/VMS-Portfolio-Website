@@ -4,6 +4,8 @@ import { VideoPlayer } from '../../components/VideoPlayer';
 import { featuredWorkVideos } from '../../data/videos';
 import { ArrowRight } from 'lucide-react';
 
+
+
 export function FeaturedWorkSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -12,7 +14,11 @@ export function FeaturedWorkSection() {
 
   // Measure content for perfect scroll stopping (no endless blank space)
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    const checkMobile = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      setIsMobile(w < 768 || (w < 1000 && h < 500));
+    };
     checkMobile();
 
     const calculateRange = () => {
@@ -40,6 +46,8 @@ export function FeaturedWorkSection() {
     target: containerRef,
     offset: ["start start", "end end"]
   });
+
+
 
   const rawX = useTransform(scrollYProgress, [0, 1], [0, -scrollRange]);
   // Smooth out the scroll physics
